@@ -1,0 +1,15 @@
+# directories
+bin/
+bin-int/
+.vs/
+
+# files
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.rc
+*.aps
+
+resource.h
+build_vs2019.bat
