@@ -31,6 +31,12 @@ workspace "Realms of Ostaga"
 	targetdir "bin/%{cfg.bulidcfg}_%cfg.architecture}"
 	objdir "bin-int/%{cfg.bulidcfg}_%cfg.architecture}"
 
+	group "Vendor"
+		include "vendor/glfw"
+		include "vendor/glad"
+
+	group ""
+
 project "Realms of Ostaga"
 	language "C++"
 	cppdialect "C++17"
@@ -51,7 +57,25 @@ project "Realms of Ostaga"
 		"src/**.cpp"
 	}
 
-	-- TODO: Use precompiled headers
+	includedirs {
+		"src",
+		"src/ostaga",
+
+		"vendor/glfw/include",
+		"vendor/glad/include",
+		"vendor/spdlog/include",
+		"vendor/imgui",
+		"vendor/glm"
+	}
+
+	links {
+		"GLFW",
+		"glad",
+		"opengl32.lib"
+	}
+
+	pchheader "ospch.h"
+	pchsource "src/ospch.cpp"
 
 	defines {
 		-- This project uses Glad as an OpenGL loader library so it is not necessary for
@@ -66,10 +90,6 @@ project "Realms of Ostaga"
 		-- Will generate several warnings, the following flag will suppress 
 		-- these warnings.
 		"_SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING"
-	}
-
-	includedirs {
-		"src"
 	}
 
 	filter "system:windows"

@@ -38,10 +38,10 @@ This would create all the necessary project files required to build the project 
 
 ### Dependencies
 ---
-The following is a list of 3rd party dependencies that *are* or *will be* used in this project:
+The following is a list of 3rd party dependencies that *are* used in this project:
 
  - [GLFW](https://gitlab.com/Sympleque/glfw)
- - [Glad](https://gitlab.com/realms-of-ostaga/sandbox-1/tree/master/vendor/glad)
+ - [Glad](https://glad.dav1d.de/)
  - [Spdlog](https://github.com/gabime/spdlog)
  - [ImGUI](https://gitlab.com/Sympleque/imgui)
  - [glm](https://github.com/g-truc/glm)
