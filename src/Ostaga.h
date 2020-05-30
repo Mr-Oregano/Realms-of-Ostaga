@@ -12,6 +12,8 @@
 	#define LOG_INIT() ::Ostaga::Logger::Init()
 	#define LOG_SHUTDOWN() ::Ostaga::Logger::Shutdown()
 
+	#define LOG_LINE() ::Ostaga::Logger::Get()->trace("")
+
 	#define	   LOG_TRACE(x, ...) ::Ostaga::Logger::Get()->trace(x, __VA_ARGS__)
 	#define		LOG_INFO(x, ...) ::Ostaga::Logger::Get()->info(x, __VA_ARGS__)
 	#define		LOG_WARN(x, ...) ::Ostaga::Logger::Get()->warn(x, __VA_ARGS__)
@@ -22,6 +24,8 @@
 
 	#define LOG_INIT()
 	#define LOG_SHUTDOWN()
+
+	#define LOG_LINE()
 
 	#define	   LOG_TRACE(x, ...)
 	#define		LOG_INFO(x, ...)
