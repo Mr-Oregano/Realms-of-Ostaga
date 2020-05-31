@@ -5,6 +5,7 @@
 
 #include <Ostaga.h>
 #include <window/Window.h>
+#include <Application.h>
 
 #include <Main.h>
 
@@ -14,16 +15,8 @@ namespace Ostaga {
 	{
 		LOG_INIT();
 
-		Window window({ 
-			1280, 
-			720, 
-			"Realms of Ostaga", 
-			OSTAGA_DEBUG_WRAP(WindowMode::Windowed, WindowMode::WindowedFullscreen), 
-			false });
-
-		window.SetVisible(true);
-		while (true)
-			window.Update();
+		Application app;
+		app.Run();
 
 		LOG_SHUTDOWN();
 		return 0;

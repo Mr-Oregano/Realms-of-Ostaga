@@ -5,6 +5,11 @@
 
 #include <Ostaga.h>
 
+#include <events/Event.h>
+#include <events/KeyEvent.h>
+#include <events/MouseEvent.h>
+#include <events/SystemEvent.h>
+
 namespace Ostaga {
 
 	enum class WindowMode
@@ -35,6 +40,8 @@ namespace Ostaga {
 		inline int GetWidth() const { return m_Data.props.width; }
 		inline int GetHeight() const { return m_Data.props.height; }
 
+		inline void SetEventCallback(std::function<void(Event&)> EventCallback) { m_Data.EventCallback = EventCallback; } 
+
 		inline bool IsVysncEnabled() const { return m_Data.props.vysnc; }
 		inline void SetVsync(bool vsync) { m_Data.props.vysnc = vsync; glfwSwapInterval(vsync ? 1 : 0); }
 
@@ -57,6 +64,7 @@ namespace Ostaga {
 	private:
 		void InitWindow();
 		GLFWwindow *CreateWindowHandle();
+		void SetupEventCallback();
 		void DestroyWindow();
 
 	private:
@@ -65,6 +73,7 @@ namespace Ostaga {
 		struct WindowData
 		{
 			WindowProps props;
+			std::function<void(Event &)> EventCallback;
 
 		} m_Data;
 

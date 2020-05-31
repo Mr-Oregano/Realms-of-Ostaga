@@ -30,7 +30,7 @@ namespace Ostaga {
 	{
 		// TODO
 	}
-
+	
 	void Window::InitWindow()
 	{
 		if (!s_InitializedGLFW)
@@ -50,6 +50,7 @@ namespace Ostaga {
 
 		m_WindowPtr = CreateWindowHandle();
 		ASSERT_CRITICAL(m_WindowPtr, "Failed to create the window");
+		SetupEventCallback();
 
 		glfwMakeContextCurrent(m_WindowPtr);
 		SetVsync(m_Data.props.vysnc);
@@ -68,6 +69,11 @@ namespace Ostaga {
 		LOG_INFO("OpenGL version: {0}", glGetString(GL_VERSION));
 		LOG_INFO("GLSL version: {0}\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
+	void Window::DestroyWindow()
+	{
+		glfwDestroyWindow(m_WindowPtr);
+	}
+	
 	GLFWwindow *Window::CreateWindowHandle()
 	{
 		switch (m_Data.props.mode)
@@ -131,8 +137,93 @@ namespace Ostaga {
 		}
 		}
 	}
-	void Window::DestroyWindow()
+	void Window::SetupEventCallback()
 	{
-		glfwDestroyWindow(m_WindowPtr);
+		glfwSetWindowUserPointer(m_WindowPtr, (void*) &m_Data);
+
+		glfwSetKeyCallback(m_WindowPtr, [](GLFWwindow *window, int key, int scancode, int action, int mods)
+		{
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			switch (action)
+			{
+				case GLFW_PRESS:
+				case GLFW_REPEAT:
+				{
+					KeyDown event{ key };
+
+					if (data.EventCallback)
+						data.EventCallback(event);
+					break;
+				}
+
+				case GLFW_RELEASE:
+				{
+					KeyUp event{ key };
+
+					if (data.EventCallback)
+						data.EventCallback(event);
+					break;
+				}
+			}
+		});
+		glfwSetMouseButtonCallback(m_WindowPtr, [](GLFWwindow *window, int button, int action, int mods)
+		{
+			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+			double xpos, ypos;
+			glfwGetCursorPos(window, &xpos, &ypos);
+
+			switch (action)
+			{
+				case GLFW_PRESS:
+				{
+					MouseDown event{ button, xpos, ypos };
+
+					if (data.EventCallback)
+						data.EventCallback(event);
+					break;
+				}
+
+				case GLFW_RELEASE:
+				{
+					MouseUp event{ button, xpos, ypos };
+
+					if (data.EventCallback)
+						data.EventCallback(event);
+					break;
+				}
+			}
+		});
+		glfwSetCursorPosCallback(m_WindowPtr, [](GLFWwindow *window, double xpos, double ypos)
+		{
+			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+			MouseMove event{ xpos, ypos };
+
+			if (data.EventCallback)
+				data.EventCallback(event);
+
+		});
+		glfwSetScrollCallback(m_WindowPtr, [](GLFWwindow *window, double xoffset, double yoffset)
+		{
+			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+			
+			double xpos, ypos;
+			glfwGetCursorPos(window, &xpos, &ypos);
+			MouseScrolled event{ xoffset, yoffset, xpos, ypos };
+
+			if (data.EventCallback)
+				data.EventCallback(event);
+
+		});
+		glfwSetWindowCloseCallback(m_WindowPtr, [](GLFWwindow *window)
+		{
+			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+			WindowClose event;
+
+			if (data.EventCallback)
+				data.EventCallback(event);
+		});
 	}
 }

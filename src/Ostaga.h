@@ -24,7 +24,7 @@
 	#define		ASSERT_INFO(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->info(y, __VA_ARGS__); }
 	#define		ASSERT_WARN(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->warn(y, __VA_ARGS__); }
 	#define    ASSERT_ERROR(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->error(y, __VA_ARGS__); }
-	#define ASSERT_CRITICAL(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->critical(y, __VA_ARGS__); }
+	#define ASSERT_CRITICAL(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->critical(y, __VA_ARGS__); exit(-1); }
 #else
 	#define OSTAGA_DEBUG_WRAP(x, ...) __VA_ARGS__
 

@@ -10,6 +10,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <events/Event.h>
+
 #include "spdlog/fmt/ostr.h"
 
 inline std::ostream &operator<<(std::ostream &os, const glm::vec2 &v)
@@ -38,6 +40,10 @@ inline std::ostream &operator<<(std::ostream &os, const glm::mat4 &v)
 		v[3][0], v[3][1], v[3][2], v[3][3]);
 
 	return os << "\n" << std::string(buf);
+}
+inline std::ostream &operator<<(std::ostream &os, const Ostaga::Event &e)
+{
+	return os << e.ToString();
 }
 
 namespace Ostaga  { 
