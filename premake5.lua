@@ -28,8 +28,8 @@ workspace "Realms of Ostaga"
 
 	filter {}
 
-	targetdir "bin/%{cfg.bulidcfg}_%cfg.architecture}"
-	objdir "bin-int/%{cfg.bulidcfg}_%cfg.architecture}"
+	targetdir "bin/%{cfg.buildcfg}_%{cfg.architecture}"
+	objdir "bin-int/%{cfg.buildcfg}_%{cfg.architecture}"
 
 	group "Vendor"
 		include "vendor/glfw"
