@@ -4,6 +4,8 @@
 //
 
 #include <Ostaga.h>
+#include <window/Window.h>
+
 #include <Main.h>
 
 namespace Ostaga {
@@ -12,19 +14,16 @@ namespace Ostaga {
 	{
 		LOG_INIT();
 
-		LOG_TRACE("Hello this is a trace message. My name is {0}", "Sympleque");
-		LOG_INFO("Hello this is an info message. My name is {0}", "Sympleque");
-		LOG_WARN("Hello this is a warn message. My name is {0}", "Sympleque");
-		LOG_ERROR("Hello this is an error message. My name is {0}", "Sympleque");
-		LOG_CRITICAL("Hello this is a critical message. My name is {0}", "Sympleque");
+		Window window({ 
+			1280, 
+			720, 
+			"Realms of Ostaga", 
+			OSTAGA_DEBUG_WRAP(WindowMode::Windowed, WindowMode::WindowedFullscreen), 
+			false });
 
-		LOG_LINE();
-
-		glm::vec2 myVector = { 0.0f, 1.5f };
-		LOG_TRACE("Here is myVector: {0}", myVector);
-
-		glm::mat4 myMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), { 0, 0, 1 });
-		LOG_TRACE("Here is myMatrix: {0}", myMatrix);
+		window.SetVisible(true);
+		while (true)
+			window.Update();
 
 		LOG_SHUTDOWN();
 		return 0;

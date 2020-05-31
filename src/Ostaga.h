@@ -19,6 +19,12 @@
 	#define		LOG_WARN(x, ...) ::Ostaga::Logger::Get()->warn(x, __VA_ARGS__)
 	#define	   LOG_ERROR(x, ...) ::Ostaga::Logger::Get()->error(x, __VA_ARGS__)
 	#define LOG_CRITICAL(x, ...) ::Ostaga::Logger::Get()->critical(x, __VA_ARGS__)
+
+	#define    ASSERT_TRACE(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->trace(y, __VA_ARGS__); }
+	#define		ASSERT_INFO(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->info(y, __VA_ARGS__); }
+	#define		ASSERT_WARN(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->warn(y, __VA_ARGS__); }
+	#define    ASSERT_ERROR(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->error(y, __VA_ARGS__); }
+	#define ASSERT_CRITICAL(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->critical(y, __VA_ARGS__); }
 #else
 	#define OSTAGA_DEBUG_WRAP(x, ...) __VA_ARGS__
 
@@ -32,6 +38,12 @@
 	#define		LOG_WARN(x, ...)
 	#define	   LOG_ERROR(x, ...)
 	#define LOG_CRITICAL(x, ...)
+
+	#define    ASSERT_TRACE(x, y, ...)
+	#define		ASSERT_INFO(x, y, ...)
+	#define		ASSERT_WARN(x, y, ...)
+	#define    ASSERT_ERROR(x, y, ...)
+	#define ASSERT_CRITICAL(x, y, ...)
 #endif
 
 #ifndef OSTAGA_BUILD_WINDOWS
