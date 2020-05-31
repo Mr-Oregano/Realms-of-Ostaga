@@ -5,10 +5,15 @@
 
 #include "Application.h"
 
+#include <layers/TestingLayer.h>
+
 namespace Ostaga {
+
+	Application *Application::s_Current = nullptr;
 
 	Application::Application()
 	{
+		s_Current = this;
 
 		WindowProps props = {
 			1280,
@@ -28,20 +33,28 @@ namespace Ostaga {
 
 	void Application::Update()
 	{
+		m_Layers.OnUpdate();
+		m_Layers.OnRender();
 	}
 
 	void Application::OnEvent(Event &e)
 	{
-		LOG_TRACE(e);
+		if (e.GetType() == EventType::WindowClose)
+			m_Running = false;
+
+		m_Layers.OnEvent(e);
 	}
 
 	void Application::Run()
 	{
+		PushLayer(new TestingLayer);
+
 		m_Running = true;
 		m_Window->SetVisible(true);
 
 		while (m_Running)
 		{
+			Update();
 			m_Window->Update();
 		}
 	}

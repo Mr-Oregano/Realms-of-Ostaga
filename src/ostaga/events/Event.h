@@ -31,5 +31,6 @@ namespace Ostaga {
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
 		OSTAGA_DEBUG_WRAP(inline virtual std::string ToString() const = 0;)
+		//
 	};
 }

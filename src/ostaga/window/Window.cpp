@@ -50,7 +50,6 @@ namespace Ostaga {
 
 		m_WindowPtr = CreateWindowHandle();
 		ASSERT_CRITICAL(m_WindowPtr, "Failed to create the window");
-		SetupEventCallback();
 
 		glfwMakeContextCurrent(m_WindowPtr);
 		SetVsync(m_Data.props.vysnc);
@@ -68,6 +67,9 @@ namespace Ostaga {
 		LOG_INFO("OpenGL renderer: {0}", glGetString(GL_RENDERER));
 		LOG_INFO("OpenGL version: {0}", glGetString(GL_VERSION));
 		LOG_INFO("GLSL version: {0}\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+		SetupEventCallback();
+
 	}
 	void Window::DestroyWindow()
 	{
@@ -225,5 +227,22 @@ namespace Ostaga {
 			if (data.EventCallback)
 				data.EventCallback(event);
 		});
+
+		// Debugging functionality - 
+		//	This will be stripped in non-debug builds
+		OSTAGA_DEBUG_WRAP(
+			glEnable(GL_DEBUG_OUTPUT);
+			glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+			{
+				switch (severity)
+				{
+				case GL_DEBUG_SEVERITY_NOTIFICATION:	LOG_TRACE(message); break;
+				case GL_DEBUG_SEVERITY_LOW:				LOG_WARN(message); break;
+				case GL_DEBUG_SEVERITY_MEDIUM:			LOG_ERROR(message); break;
+				case GL_DEBUG_SEVERITY_HIGH:			LOG_CRITICAL(message); break;
+				}
+
+			}, nullptr);
+		)
 	}
 }
