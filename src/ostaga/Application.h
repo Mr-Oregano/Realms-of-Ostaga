@@ -13,7 +13,7 @@ namespace Ostaga
 		Application();
 		~Application();
 
-		void Update();
+		void Update(TimeStep ts);
 		void OnEvent(Event &e);
 
 		// TODO: consider implementing a State system

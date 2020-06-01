@@ -30,6 +30,7 @@ namespace Ostaga {
 			);
 
 			m_Shader->Bind();
+			m_Shader->SetUniformMat4("u_Projection", glm::ortho(-16.0f/9.0f, 16.0f/9.0f, -1.0f, 1.0f));
 
 			float vertices[] = {
 				-0.5f, -0.5f,
@@ -51,12 +52,15 @@ namespace Ostaga {
 		{
 		}
 
-		virtual void OnUpdate()
+		virtual void OnUpdate(TimeStep ts)
 		{
+			static float angle = 0.0f;
+			m_Shader->SetUniformMat4("u_Model", glm::rotate(glm::mat4(1.0), glm::radians(angle), { 0, 0, 1}));
+			angle += ts * 100.0f;
 		}
 		virtual void OnRender()
 		{
-			m_Shader->SetUniformFloat4("u_Color", { 1.0f, 0.0, 1.0f, 1.0f });
+			m_Shader->SetUniformFloat4("u_Color", { 1.0f, 0.0f, 1.0f, 1.0f });
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 		virtual bool OnEvent(Event &e)

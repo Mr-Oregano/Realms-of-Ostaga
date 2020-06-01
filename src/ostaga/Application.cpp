@@ -5,6 +5,8 @@
 
 #include "Application.h"
 
+#include <TimeStep.h>
+
 #include <layers/TestingLayer.h>
 
 namespace Ostaga {
@@ -31,9 +33,9 @@ namespace Ostaga {
 	{
 	}
 
-	void Application::Update()
+	void Application::Update(TimeStep ts)
 	{
-		m_Layers.OnUpdate();
+		m_Layers.OnUpdate(ts);
 		m_Layers.OnRender();
 	}
 
@@ -49,12 +51,18 @@ namespace Ostaga {
 	{
 		PushLayer(new TestingLayer);
 
+		float lastTime = (float) glfwGetTime();
+
 		m_Running = true;
 		m_Window->SetVisible(true);
 
 		while (m_Running)
 		{
-			Update();
+			float now = (float) glfwGetTime();
+			TimeStep ts{now - lastTime};
+			lastTime = now;
+
+			Update(ts);
 			m_Window->Update();
 		}
 	}

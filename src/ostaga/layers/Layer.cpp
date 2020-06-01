@@ -42,15 +42,15 @@ namespace Ostaga {
 		return last;
 	}
 
-	void LayerStack::OnUpdate()
+	void LayerStack::OnUpdate(TimeStep ts)
 	{
 		auto it = m_Overlays.rbegin();
 		for (; it != m_Overlays.rend(); ++it)
-			(*it)->OnUpdate();
+			(*it)->OnUpdate(ts);
 
 		it = m_Layers.rbegin();
 		for (; it != m_Layers.rend(); ++it)
-			(*it)->OnUpdate();
+			(*it)->OnUpdate(ts);
 	}
 	void LayerStack::OnRender()
 	{

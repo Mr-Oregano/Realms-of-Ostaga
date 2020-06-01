@@ -7,6 +7,8 @@
 #include <events/MouseEvent.h>
 #include <events/SystemEvent.h>
 
+#include <TimeStep.h>
+
 namespace Ostaga {
 
 	class Layer
@@ -23,7 +25,7 @@ namespace Ostaga {
 		virtual void OnStart() = 0;
 		virtual void OnStop() = 0;
 
-		virtual void OnUpdate() = 0;
+		virtual void OnUpdate(TimeStep ts) = 0;
 		virtual void OnRender() = 0;
 		virtual bool OnEvent(Event &e) = 0;
 
@@ -46,7 +48,7 @@ namespace Ostaga {
 		Layer* PopLayer();
 		Layer* PopOverlay();
 
-		void OnUpdate();
+		void OnUpdate(TimeStep ts);
 		void OnRender();
 		void OnEvent(Event &e);
 
