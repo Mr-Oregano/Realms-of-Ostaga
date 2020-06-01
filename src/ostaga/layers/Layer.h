@@ -31,7 +31,7 @@ namespace Ostaga {
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
 		OSTAGA_DEBUG_WRAP(std::string m_Name;)
-		OSTAGA_DEBUG_WRAP(bool m_Visible = false;)
+		OSTAGA_DEBUG_WRAP(bool m_Visible = true;)
 	};
 
 	class LayerStack
