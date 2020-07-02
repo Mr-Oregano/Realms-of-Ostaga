@@ -15,7 +15,7 @@ namespace Ostaga {
 	{
 	public:
 		// Debugging functionality
-		OSTAGA_DEBUG_WRAP(
+		OSTAGA_IF_DEBUG(
 			Layer(const std::string &name = "Unnamed-Layer") : m_Name(name) {},
 			Layer() = default;)
 		//
@@ -32,8 +32,8 @@ namespace Ostaga {
 	public:
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
-		OSTAGA_DEBUG_WRAP(std::string m_Name;)
-		OSTAGA_DEBUG_WRAP(bool m_Visible = true;)
+		OSTAGA_IF_DEBUG(mutable std::string m_Name;)
+		OSTAGA_IF_DEBUG(mutable bool m_Visible = true;)
 	};
 
 	class LayerStack

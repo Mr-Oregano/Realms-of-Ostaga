@@ -21,7 +21,7 @@ namespace Ostaga {
 			1280,
 			720,
 			"Realms of Ostaga",
-			OSTAGA_DEBUG_WRAP(WindowMode::Windowed, WindowMode::WindowedFullscreen),
+			OSTAGA_IF_DEBUG(WindowMode::Windowed, WindowMode::WindowedFullscreen),
 			false 
 		};
 

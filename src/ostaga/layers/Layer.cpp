@@ -55,11 +55,11 @@ namespace Ostaga {
 	void LayerStack::OnRender()
 	{
 		for (Layer *layer : m_Layers)
-			OSTAGA_DEBUG_WRAP(if (layer->m_Visible))
+			OSTAGA_IF_DEBUG(if (layer->m_Visible))
 				layer->OnRender();
 
 		for (Layer *overlay : m_Overlays)
-			OSTAGA_DEBUG_WRAP(if (overlay->m_Visible))
+			OSTAGA_IF_DEBUG(if (overlay->m_Visible))
 				overlay->OnRender();
 	}
 

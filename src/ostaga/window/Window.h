@@ -46,7 +46,7 @@ namespace Ostaga {
 		inline void SetVsync(bool vsync) { m_Data.props.vysnc = vsync; glfwSwapInterval(vsync ? 1 : 0); }
 
 		void SetWindowMode(WindowMode mode);
-		OSTAGA_DEBUG_WRAP(inline void SetClearColor(const glm::vec4 &color) { glClearColor(color.r, color.g, color.b, color.a); })
+		OSTAGA_IF_DEBUG(inline void SetClearColor(const glm::vec4 &color) { glClearColor(color.r, color.g, color.b, color.a); })
 
 		inline bool IsVisible() const { return m_Visible; }
 		inline void SetVisible(bool visible) {

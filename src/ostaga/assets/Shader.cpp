@@ -28,7 +28,7 @@ namespace Ostaga { namespace Assets {
 
 		// Shader compilation check will only be available in debug builds
 		//	distribution builds should succeeded shader compilation.
-		OSTAGA_DEBUG_WRAP(
+		OSTAGA_IF_DEBUG(
 			GLint status = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 			if (status == GL_FALSE)
@@ -55,7 +55,7 @@ namespace Ostaga { namespace Assets {
 
 		// Program linkage check will only be available in debug builds
 		//	distribution builds should succeeded linking.
-		OSTAGA_DEBUG_WRAP(
+		OSTAGA_IF_DEBUG(
 			GLint status = 0;
 			glGetProgramiv(m_ContextID, GL_LINK_STATUS, &status);
 			if (status == GL_FALSE)

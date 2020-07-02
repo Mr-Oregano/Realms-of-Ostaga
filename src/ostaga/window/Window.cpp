@@ -23,7 +23,7 @@ namespace Ostaga {
 		glfwPollEvents();
 		glfwSwapBuffers(m_WindowPtr);
 
-		OSTAGA_DEBUG_WRAP(glClear(GL_COLOR_BUFFER_BIT));
+		OSTAGA_IF_DEBUG(glClear(GL_COLOR_BUFFER_BIT));
 	}
 
 	void Window::SetWindowMode(WindowMode mode)
@@ -230,7 +230,7 @@ namespace Ostaga {
 
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
-		OSTAGA_DEBUG_WRAP(
+		OSTAGA_IF_DEBUG(
 			glEnable(GL_DEBUG_OUTPUT);
 			glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 			{

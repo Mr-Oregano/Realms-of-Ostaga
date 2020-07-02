@@ -20,7 +20,7 @@ namespace Ostaga {
 	public:
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
-		OSTAGA_DEBUG_WRAP(TestingLayer() : Layer("TestingLayer") {})
+		OSTAGA_IF_DEBUG(TestingLayer() : Layer("TestingLayer") {})
 
 		virtual void OnStart()
 		{

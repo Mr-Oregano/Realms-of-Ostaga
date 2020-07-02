@@ -43,7 +43,7 @@ inline std::ostream &operator<<(std::ostream &os, const glm::mat4 &v)
 }
 inline std::ostream &operator<<(std::ostream &os, const Ostaga::Event &e)
 {
-	return os OSTAGA_DEBUG_WRAP(<< e.ToString());
+	return os OSTAGA_IF_DEBUG(<< e.ToString());
 }
 
 namespace Ostaga  { 

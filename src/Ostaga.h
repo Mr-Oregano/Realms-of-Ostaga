@@ -4,7 +4,7 @@
 #define OSTAGA_OPENGL_VERSION_MINOR 6
 
 #if defined(OSTAGA_DEBUG) || defined(OSTAGA_RELEASE)
-	#define OSTAGA_DEBUG_WRAP(x, ...) x
+	#define OSTAGA_IF_DEBUG(x, ...) x
 
 	// The logger will only be included in the program for debug builds
 	#include <Logger.h>
@@ -26,7 +26,7 @@
 	#define    ASSERT_ERROR(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->error(y, __VA_ARGS__); }
 	#define ASSERT_CRITICAL(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->critical(y, __VA_ARGS__); exit(-1); }
 #else
-	#define OSTAGA_DEBUG_WRAP(x, ...) __VA_ARGS__
+	#define OSTAGA_IF_DEBUG(x, ...) __VA_ARGS__
 
 	#define LOG_INIT()
 	#define LOG_SHUTDOWN()
