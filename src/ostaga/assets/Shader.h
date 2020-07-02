@@ -1,13 +1,10 @@
 #pragma once
 
-#include <Util.h>
 #include <Ostaga.h>
+#include <Util.h>
+#include <Maths.h>
 
 #include <glad/glad.h>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <unordered_map>

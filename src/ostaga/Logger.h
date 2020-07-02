@@ -5,14 +5,11 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <spdlog/fmt/ostr.h>
 
 #include <events/Event.h>
 
-#include "spdlog/fmt/ostr.h"
+#include <Maths.h>
 
 inline std::ostream &operator<<(std::ostream &os, const glm::vec2 &v)
 {
