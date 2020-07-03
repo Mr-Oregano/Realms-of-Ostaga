@@ -13,14 +13,14 @@ in float v_Rot[];
 in vec4 v_Color[];
 out vec4 vf_Color;
 
-void CreateVertex(vec2 pos, vec2 corner, float rotation)
+void CreateVertex(vec2 center, vec2 pos, float rotation)
 {
-	vec2 cornerRot;
+	vec2 posRot;
 
-	cornerRot.x = corner.x * cos(rotation) - corner.y * sin(rotation);
-	cornerRot.y = corner.x * sin(rotation) + corner.y * cos(rotation);
+	posRot.x = pos.x * cos(rotation) - pos.y * sin(rotation);
+	posRot.y = pos.x * sin(rotation) + pos.y * cos(rotation);
 
-	gl_Position = u_ViewProjection * vec4(cornerRot + pos, 0.0, 1.0);
+	gl_Position = u_ViewProjection * vec4(posRot + center, 0.0, 1.0);
 	EmitVertex();
 }
 void main()
