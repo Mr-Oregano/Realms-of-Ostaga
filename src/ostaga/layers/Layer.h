@@ -27,7 +27,7 @@ namespace Ostaga {
 
 		virtual void OnUpdate(TimeStep ts) = 0;
 		virtual void OnRender() = 0;
-		virtual bool OnEvent(Event &e) = 0;
+		virtual void OnEvent(Event &e) = 0;
 
 	public:
 		// Debugging functionality - 

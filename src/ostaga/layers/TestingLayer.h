@@ -9,6 +9,8 @@
 
 #include <util/Random.h>
 
+#include <events/KeyEvent.h>
+
 namespace Ostaga {
 
 	using namespace Graphics;
@@ -50,7 +52,7 @@ namespace Ostaga {
 		{
 			Renderer::BeginScene(glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f));
 			
-			static const int size = 64;
+			static const int size = 128;
 
 			Random::SetSeed(1);
 			for (float i = -0.5f; i < 1280 / size + 1.5f; ++i)
@@ -60,9 +62,18 @@ namespace Ostaga {
 			Renderer::EndScene();
 		}
 
-		virtual bool OnEvent(Event &e)
+		virtual void OnEvent(Event &e)
 		{
-			return false;
+			e.Dispatch<KeyDown>([](KeyDown &e) {
+				if (e.keyCode == GLFW_KEY_W)
+				{
+					LOG_INFO("Foward");
+					return true;
+				}
+
+				return false;
+			});
+
 		}
 	};
 }

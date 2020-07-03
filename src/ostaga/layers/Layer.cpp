@@ -68,16 +68,20 @@ namespace Ostaga {
 		auto it = m_Overlays.rbegin();
 		for (; it != m_Overlays.rend(); ++it)
 		{
+			(*it)->OnEvent(e);
+
 			// Event has been processed by the layer
-			if ((*it)->OnEvent(e))
+			if (e.Handled)
 				return;
 		}
 
 		it = m_Layers.rbegin();
 		for (; it != m_Layers.rend(); ++it)
 		{
+			(*it)->OnEvent(e);
+
 			// Event has been processed by the layer
-			if ((*it)->OnEvent(e))
+			if (e.Handled)
 				return;
 		}
 	}
