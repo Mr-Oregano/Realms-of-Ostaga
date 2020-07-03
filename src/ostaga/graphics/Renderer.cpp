@@ -15,77 +15,112 @@ namespace Ostaga { namespace Graphics {
 
 	using namespace Assets;
 
+	struct Vertex
+	{
+		glm::vec4 dimensions;
+		glm::vec4 color;
+		float rotation;
+	};
+
 	struct RendererData
 	{
 		Ref<Shader> shader;
 
-		GLuint vertexArray = 0;
-		GLuint vertexData = 0;
+		GLuint VAO = 0;
+		GLuint VBO = 0;
+	
+		std::vector<Vertex> vertices;
+		size_t vertexCount = 0;
 	};
 
-	static RendererData *data = nullptr;
+	static RendererData *renderer = nullptr;
 
-	void Renderer::Init()
+	void Renderer::Init(const RendererProps &props)
 	{
-		data = new RendererData;
+		renderer = new RendererData;
 
-		data->shader = Shader::LoadFromFiles(
+		renderer->shader = Shader::LoadFromFiles(
 			"res/shaders/renderer-shader-vert.glsl",
+			"res/shaders/renderer-shader-geom.glsl",
 			"res/shaders/renderer-shader-frag.glsl"
 		);
-		data->shader->Bind();
 
-		GLuint &vertexArray = data->vertexArray;
-		GLuint &vertexData = data->vertexData;
+		GLuint &VAO = renderer->VAO;
+		GLuint &VBO = renderer->VBO;
 
-		float QUAD_VERTICES[] = {
-			-0.5f, -0.5f,
-			 0.5f, -0.5f,
-			 0.5f,  0.5f,
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
 
-			 0.5f,  0.5f,
-			-0.5f,  0.5f,
-			-0.5f, -0.5f
-		};
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-		glGenVertexArrays(1, &vertexArray);
-		glBindVertexArray(vertexArray);
+		// Buffer Data
+		renderer->vertices.resize(props.batchCapacity);
+		glBufferData(GL_ARRAY_BUFFER, renderer->vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+		//
 
-		glGenBuffers(1, &vertexData);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexData);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD_VERTICES), QUAD_VERTICES, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, dimensions));
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, rotation));
+		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, color));
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		// Bindings currently remain constant throughout the application
+		// no need to rebind for now.
+		
+		renderer->shader->Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindVertexArray(VAO);
 
 	}
 
 	void Renderer::Shutdown()
 	{
-		delete data;
-		data = nullptr;
+		glDeleteBuffers(1, &renderer->VBO);
+		glDeleteVertexArrays(1, &renderer->VAO);
+
+		delete renderer;
+		renderer = nullptr;
 	}
 
 	void Renderer::BeginScene(const glm::mat4& camera)
 	{
-		const Shader &shader = *data->shader;
+		const Shader &shader = *renderer->shader;
 		shader.SetUniformMat4("u_ViewProjection", camera);
 	}
 
-	void Renderer::Draw(const glm::vec2 &position, const glm::vec2 &size, float rotation)
+	void Renderer::Draw(const glm::vec2 &position, const glm::vec2 &size, float rotation, const glm::vec4 &color)
 	{
-		glm::mat4 model = glm::translate(glm::mat4{1.0f}, glm::vec3{position, 0.0f})
-						* glm::scale(glm::mat4{1.0f}, glm::vec3{size, 0.0f})
-						* glm::rotate(glm::mat4{1.0f}, glm::radians(rotation), { 0, 0, 1 });
+		std::vector<Vertex> &vertices = renderer->vertices;
+		size_t &vertexCount = renderer->vertexCount;
 
-		data->shader->SetUniformMat4("u_Model", model);
+		// If the buffer has reached maximum capacity then
+		// flush before inserting new elements.
+		if (vertexCount > vertices.capacity() - 1)
+			Flush();
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		Vertex &v = vertices[vertexCount];
+		v.dimensions = { position.x, position.y, size.x, size.y };
+		v.rotation = glm::radians(rotation);
+		v.color = color;
+		++vertexCount;
 	}
 
 	void Renderer::EndScene()
 	{
-	
+		if (renderer->vertexCount > 0)
+			Flush();
+	}
+
+	void Renderer::Flush()
+	{
+		std::vector<Vertex> &vertices = renderer->vertices;
+		size_t &vertexCount = renderer->vertexCount;
+
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
+		glDrawArrays(GL_POINTS, 0, (GLsizei) vertexCount);
+		vertexCount = 0;
 	}
 
 } }

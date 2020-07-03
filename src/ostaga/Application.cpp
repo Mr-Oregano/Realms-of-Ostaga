@@ -9,6 +9,8 @@
 
 #include <layers/TestingLayer.h>
 
+#include <graphics/Renderer.h>
+
 namespace Ostaga {
 
 	Application *Application::s_Current = nullptr;
@@ -28,9 +30,12 @@ namespace Ostaga {
 		m_Window = std::make_unique<Window>(props);
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
 
+		Renderer::Init({ 10000 });
+
 	}
 	Application::~Application()
 	{
+		Renderer::Shutdown();
 	}
 
 	void Application::Update(TimeStep ts)

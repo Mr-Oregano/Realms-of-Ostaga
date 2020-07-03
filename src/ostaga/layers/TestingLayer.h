@@ -22,12 +22,12 @@ namespace Ostaga {
 
 		virtual void OnStart()
 		{
-			Renderer::Init();
+			
 		}
 
 		virtual void OnStop()
 		{
-			Renderer::Shutdown();
+			
 		}
 
 		virtual void OnUpdate(TimeStep ts)
@@ -35,10 +35,27 @@ namespace Ostaga {
 			angle += 180 * ts; // 180 degrees per second
 		}
 
+		glm::vec4 RandColor()
+		{
+			return  {
+				rand() / (float) RAND_MAX, 
+				rand() / (float) RAND_MAX, 
+				rand() / (float) RAND_MAX, 
+				1.0f
+			};
+		}
+
 		virtual void OnRender()
 		{
-			Renderer::BeginScene(glm::ortho(-16.0f / 9.0f, 16.0f / 9.0f, -1.0f, 1.0f));
-			Renderer::Draw({ 0.0f, 0.0f }, { 0.5f, 0.5f }, angle);
+			Renderer::BeginScene(glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f));
+			
+			static const int size = 64;
+
+			srand(0);
+			for (int i = -1; i < 1280 / size + 1; ++i)
+				for (int j = -1; j < 720 / size + 1; ++j)
+					Renderer::Draw({ size * (i + 0.5f),  size * (j + 0.5) }, glm::vec2{ size }, angle, RandColor());
+
 			Renderer::EndScene();
 		}
 
