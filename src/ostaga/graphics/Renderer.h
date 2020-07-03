@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Maths.h>
+#include <util/Maths.h>
 
 namespace Ostaga { namespace Graphics {
 
@@ -17,7 +17,7 @@ namespace Ostaga { namespace Graphics {
 
 		static void BeginScene(const glm::mat4 &camera);
 
-		// Rotations are expected in degrees.
+		// Rotations are expected in radians.
 		static void Draw(const glm::vec2 &position, const glm::vec2 &size, float rotation = 0.0f, const glm::vec4 &color = glm::vec4{ 1 }); 
 		
 		static void EndScene();

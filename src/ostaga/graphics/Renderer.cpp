@@ -102,7 +102,7 @@ namespace Ostaga { namespace Graphics {
 
 		Vertex &v = vertices[vertexCount];
 		v.dimensions = { position.x, position.y, size.x, size.y };
-		v.rotation = glm::radians(rotation);
+		v.rotation = rotation;
 		v.color = color;
 		++vertexCount;
 	}

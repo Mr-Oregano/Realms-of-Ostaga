@@ -7,7 +7,7 @@
 	#define OSTAGA_IF_DEBUG(x, ...) x
 
 	// The logger will only be included in the program for debug builds
-	#include <Logger.h>
+	#include <util/Logger.h>
 
 	#define LOG_INIT() ::Ostaga::Logger::Init()
 	#define LOG_SHUTDOWN() ::Ostaga::Logger::Shutdown()

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <Ostaga.h>
-#include <Util.h>
+#include <util/Ref.h>
 
 #include <layers/Layer.h>
 #include <assets/Shader.h>
 #include <graphics/Renderer.h>
+
+#include <util/Random.h>
 
 namespace Ostaga {
 
@@ -22,25 +24,24 @@ namespace Ostaga {
 
 		virtual void OnStart()
 		{
-			
 		}
 
 		virtual void OnStop()
 		{
-			
 		}
 
 		virtual void OnUpdate(TimeStep ts)
 		{
-			angle += 180 * ts; // 180 degrees per second
+			static const float speed = glm::radians(180.0f);
+			angle += speed * ts; // radians per second
 		}
 
 		glm::vec4 RandColor()
 		{
 			return  {
-				rand() / (float) RAND_MAX, 
-				rand() / (float) RAND_MAX, 
-				rand() / (float) RAND_MAX, 
+				Random::Float(), 
+				Random::Float(),
+				Random::Float(),
 				1.0f
 			};
 		}
@@ -51,10 +52,10 @@ namespace Ostaga {
 			
 			static const int size = 64;
 
-			srand(0);
-			for (int i = -1; i < 1280 / size + 1; ++i)
-				for (int j = -1; j < 720 / size + 1; ++j)
-					Renderer::Draw({ size * (i + 0.5f),  size * (j + 0.5) }, glm::vec2{ size }, angle, RandColor());
+			Random::SetSeed(1);
+			for (float i = -0.5f; i < 1280 / size + 1.5f; ++i)
+				for (float j = -0.5f; j < 720 / size + 1.5f; ++j)
+					Renderer::Draw({ size * i,  size * j }, glm::vec2{ size }, angle, RandColor());
 
 			Renderer::EndScene();
 		}

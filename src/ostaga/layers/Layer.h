@@ -7,7 +7,7 @@
 #include <events/MouseEvent.h>
 #include <events/SystemEvent.h>
 
-#include <TimeStep.h>
+#include <util/TimeStep.h>
 
 namespace Ostaga {
 

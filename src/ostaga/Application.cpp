@@ -5,7 +5,7 @@
 
 #include "Application.h"
 
-#include <TimeStep.h>
+#include <util/TimeStep.h>
 
 #include <layers/TestingLayer.h>
 

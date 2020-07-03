@@ -9,7 +9,7 @@
 
 #include <events/Event.h>
 
-#include <Maths.h>
+#include <util/Maths.h>
 
 inline std::ostream &operator<<(std::ostream &os, const glm::vec2 &v)
 {
