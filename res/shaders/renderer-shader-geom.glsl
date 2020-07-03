@@ -29,13 +29,10 @@ void main()
 	vf_Color = v_Color[0];
 	//
 
-	vec2 size = v_Size[0];
-	vec2 pos = v_Pos[0];
-
-	CreateVertex(pos, size * vec2(-0.5,  0.5), v_Rot[0]);
-	CreateVertex(pos, size * vec2(-0.5, -0.5), v_Rot[0]);
-	CreateVertex(pos, size * vec2( 0.5,  0.5), v_Rot[0]);
-	CreateVertex(pos, size * vec2( 0.5, -0.5), v_Rot[0]);
+	CreateVertex(v_Pos[0], v_Size[0] * vec2(-0.5,  0.5), v_Rot[0]);
+	CreateVertex(v_Pos[0], v_Size[0] * vec2(-0.5, -0.5), v_Rot[0]);
+	CreateVertex(v_Pos[0], v_Size[0] * vec2( 0.5,  0.5), v_Rot[0]);
+	CreateVertex(v_Pos[0], v_Size[0] * vec2( 0.5, -0.5), v_Rot[0]);
 
 	EndPrimitive();
 }
