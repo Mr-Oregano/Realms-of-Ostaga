@@ -54,7 +54,9 @@ project "Realms of Ostaga"
 
 	files {
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"vendor/stb_image/**.h",
+		"vendor/stb_image/**.cpp"
 	}
 
 	includedirs {
@@ -64,6 +66,7 @@ project "Realms of Ostaga"
 		"vendor/glfw/include",
 		"vendor/glad/include",
 		"vendor/spdlog/include",
+		"vendor/stb_image",
 		"vendor/imgui",
 		"vendor/glm"
 	}
