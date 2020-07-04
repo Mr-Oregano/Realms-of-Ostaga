@@ -43,10 +43,15 @@ namespace Ostaga { namespace Graphics {
 
 	static int MAX_TEXTURE_UNITS = 1;
 
-	void Renderer::Init(const RendererProps &props)
+	void SetPipelineState()
 	{
-		renderer = new RendererData;
-
+		// Renderer State
+		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	void LoadAssets()
+	{
 		renderer->shader = Shader::LoadFromFiles(
 			"res/shaders/renderer-shader-vert.glsl",
 			"res/shaders/renderer-shader-geom.glsl",
@@ -54,6 +59,11 @@ namespace Ostaga { namespace Graphics {
 		);
 		renderer->shader->Bind();
 
+		unsigned char data[] = { 0xff, 0xff, 0xff, 0xff };
+		renderer->whiteTex = Texture::LoadFromData(data, 1, 1, 4, { Filter::Nearest, WrapMode::ClampToEdge, MipmapMode::None });
+	}
+	void CreateBufferStore()
+	{
 		GLuint &VAO = renderer->VAO;
 		GLuint &VBO = renderer->VBO;
 
@@ -64,44 +74,47 @@ namespace Ostaga { namespace Graphics {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		// Buffer Data
-		renderer->vertices.resize(props.batchCapacity);
 		glBufferData(GL_ARRAY_BUFFER, renderer->vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
 		//
 
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, dimensions));
-		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, rotation));
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, color));
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, texID));
-		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, texelSize));
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, dimensions));
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, rotation));
+		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, color));
+		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texID));
+		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texelSize));
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 		glEnableVertexAttribArray(4);
-
-		// Renderer State
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-		// Graphics device polling
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURE_UNITS);
-		//
-		
-		unsigned char data[] = { 0xff, 0xff, 0xff, 0xff };
-		renderer->whiteTex = Texture::LoadFromData(data, 1, 1, 4, { Filter::Nearest, WrapMode::ClampToEdge, MipmapMode::None });
-
-		renderer->textures.resize(MAX_TEXTURE_UNITS);
-
+	}
+	void SetTextureUnits()
+	{
 		std::vector<int> texUnits(MAX_TEXTURE_UNITS);
 		for (int i = 0; i < texUnits.size(); ++i)
 			texUnits[i] = i;
 
-		renderer->shader->SetUniformIntV("u_Textures", texUnits.data(), (GLsizei) texUnits.size());
+		renderer->shader->SetUniformIntV("u_Textures", texUnits.data(), (GLsizei)texUnits.size());
+	}
+
+	void Renderer::Init(const RendererProps &props)
+	{
+		renderer = new RendererData;
+
+		// Graphics device polling
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURE_UNITS);
+		//
+
+		renderer->vertices.resize(props.batchCapacity);
+		renderer->textures.resize(MAX_TEXTURE_UNITS);
+
+		SetPipelineState();
+		CreateBufferStore();
+		LoadAssets();
+		SetTextureUnits();
 		
 		// Bindings currently remain constant throughout the application
 		// no need to rebind for now.
-
 	}
 
 	void Renderer::Shutdown()
