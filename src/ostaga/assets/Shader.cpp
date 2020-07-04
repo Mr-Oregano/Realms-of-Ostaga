@@ -89,58 +89,20 @@ namespace Ostaga { namespace Assets {
 		}
 	}
 
-	void Shader::LoadShaderUniforms()
+	GLint Shader::GetUniformLocation(const std::string &name)
 	{
-		GLint active_uniforms = 0;
-		GLint max_name_length = 0;
+		auto it_location = m_Uniforms.find(name);
 
-		glGetProgramiv(this->m_ContextID, GL_ACTIVE_UNIFORMS, &active_uniforms);
-		glGetProgramiv(this->m_ContextID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_length);
+		if (it_location != m_Uniforms.end())
+			return it_location->second;
 
-		if (max_name_length < 1)
-			return;
-
-		std::vector<char> name_buffer(max_name_length, 0);
-		GLint uniform_size = 0;
-		GLenum uniform_type = 0;
-
-		// TODO: Properly retrive array uniforms and structs
-		LOG_TRACE("Loading uniforms:");
-		for (int i = 0; i < active_uniforms; ++i)
-		{
-			glGetActiveUniform(
-				this->m_ContextID,
-				i,
-				max_name_length,
-				nullptr, &uniform_size, &uniform_type,
-				name_buffer.data());
-
-			std::string name(name_buffer.data());
-			GLint location = glGetUniformLocation(m_ContextID, name.c_str());
-
-			LOG_TRACE("  Found uniform \"{0}\" - location: {1}", name, location);
-			this->m_Uniforms.insert(std::pair(name, location));
-		}
-		//
-	}
-	GLint Shader::GetUniformLocation(const std::string &name) const
-	{
-		auto location = m_Uniforms.find(name);
-		if (location == m_Uniforms.end())
-		{
-			// The uniform has not been found. Return -1.
-			// According to the glUniform spec:
-			//
-			//		If location is equal to -1, the data passed in will be 
-			//		silently ignored and the specified uniform variable will 
-			//		not be changed.
-			//
-			LOG_WARN("Attempting to modifying non-existent uniform (\"{0}\") in shader program #{1}", name, this->m_ContextID);
-			return -1;
-
-		}
-
-		return location->second;
+		GLint location = glGetUniformLocation(this->m_ContextID, name.c_str());
+		if (location != -1)
+			m_Uniforms.insert(std::pair(name, location));
+		else
+			LOG_WARN("Attempting to modify uniform \"{0}\", however, the uniform was never found!", name);
+		
+		return location;
 	}
 
 	static std::string ReadFileAsString(const std::string &filepath)
@@ -195,7 +157,6 @@ namespace Ostaga { namespace Assets {
 
 		shader->LinkProgram();
 		shader->ReleaseShaders();
-		shader->LoadShaderUniforms();
 
 		return shader;
 	}
@@ -213,7 +174,6 @@ namespace Ostaga { namespace Assets {
 
 		shader->LinkProgram();
 		shader->ReleaseShaders();
-		shader->LoadShaderUniforms();
 
 		return shader;
 	}
