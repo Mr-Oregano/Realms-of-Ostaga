@@ -1,4 +1,4 @@
-project "glad"
+project "stb_image"
     kind "StaticLib"
     language "C"
     staticruntime "on"
@@ -7,9 +7,8 @@ project "glad"
     objdir ("bin-int/%{cfg.longname}_%{cfg.architecture}")
 
     files {
-        "include/glad/glad.h",
-        "include/KHR/khrplatform.h",
-        "src/glad.c"
+        "include/**.h",
+        "src/**.cpp"
     }
 
     includedirs {

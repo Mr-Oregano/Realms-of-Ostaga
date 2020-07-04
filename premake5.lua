@@ -34,6 +34,7 @@ workspace "Realms of Ostaga"
 	group "Vendor"
 		include "vendor/glfw"
 		include "vendor/glad"
+		include "vendor/stb_image"
 
 	group ""
 
@@ -54,9 +55,7 @@ project "Realms of Ostaga"
 
 	files {
 		"src/**.h",
-		"src/**.cpp",
-		"vendor/stb_image/**.h",
-		"vendor/stb_image/**.cpp"
+		"src/**.cpp"
 	}
 
 	includedirs {
@@ -66,7 +65,7 @@ project "Realms of Ostaga"
 		"vendor/glfw/include",
 		"vendor/glad/include",
 		"vendor/spdlog/include",
-		"vendor/stb_image",
+		"vendor/stb_image/include",
 		"vendor/imgui",
 		"vendor/glm"
 	}
@@ -74,6 +73,7 @@ project "Realms of Ostaga"
 	links {
 		"GLFW",
 		"glad",
+		"stb_image",
 		"opengl32.lib"
 	}
 
