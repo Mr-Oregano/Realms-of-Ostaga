@@ -6,10 +6,8 @@
 #include "Renderer.h"
 
 #include <assets/Shader.h>
-#include <Ostaga.h>
 
 #include <glad/glad.h>
-
 
 namespace Ostaga { namespace Graphics {
 
@@ -18,25 +16,22 @@ namespace Ostaga { namespace Graphics {
 	struct Vertex
 	{
 		glm::vec4 dimensions;
-		glm::vec4 color;
+		glm::vec4 tint;
+		glm::vec4 texCoords;
 		glm::vec2 texelSize;
-		float texID;
 		float rotation;
 	};
 
 	struct RendererData
 	{
 		Ref<Shader> shader;
-		Ref<Texture> whiteTex;
+		Ref<TextureAtlas> atlas;
 
 		GLuint VAO = 0;
 		GLuint VBO = 0;
 	
 		std::vector<Vertex> vertices;
 		size_t vertexCount = 0;
-
-		std::vector<Ref<Texture>> textures;
-		size_t textureCount = 0;
 	};
 
 	static RendererData *renderer = nullptr;
@@ -58,9 +53,6 @@ namespace Ostaga { namespace Graphics {
 			"res/shaders/renderer-shader-frag.glsl"
 		);
 		renderer->shader->Bind();
-
-		unsigned char data[] = { 0xff, 0xff, 0xff, 0xff };
-		renderer->whiteTex = Texture::LoadFromData(data, 1, 1, 4, { Filter::Nearest, WrapMode::ClampToEdge, MipmapMode::None });
 	}
 	void CreateBufferStore()
 	{
@@ -79,39 +71,25 @@ namespace Ostaga { namespace Graphics {
 
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, dimensions));
 		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, rotation));
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, color));
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texID));
-		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texelSize));
+		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, tint));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texelSize));
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texCoords));
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 		glEnableVertexAttribArray(4);
 	}
-	void SetTextureUnits()
-	{
-		std::vector<int> texUnits(MAX_TEXTURE_UNITS);
-		for (int i = 0; i < texUnits.size(); ++i)
-			texUnits[i] = i;
-
-		renderer->shader->SetUniformIntV("u_Textures", texUnits.data(), (GLsizei)texUnits.size());
-	}
 
 	void Renderer::Init(const RendererProps &props)
 	{
 		renderer = new RendererData;
 
-		// Graphics device polling
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURE_UNITS);
-		//
-
 		renderer->vertices.resize(props.batchCapacity);
-		renderer->textures.resize(MAX_TEXTURE_UNITS);
 
 		SetPipelineState();
 		CreateBufferStore();
 		LoadAssets();
-		SetTextureUnits();
 		
 		// Bindings currently remain constant throughout the application
 		// no need to rebind for now.
@@ -132,44 +110,27 @@ namespace Ostaga { namespace Graphics {
 		shader.SetUniformMat4("u_ViewProjection", camera);
 	}
 
-	void Renderer::Draw(const glm::vec2 &position, const glm::vec2 &size, const glm::vec4 &color, float rotation)
+	void Renderer::SetTextureAtlas(const Ref<Assets::TextureAtlas> &atlas)
 	{
-		Draw(position, size, color, renderer->whiteTex, rotation);
+		renderer->atlas = atlas;
+		atlas->Bind();
 	}
 
-	void Renderer::Draw(const glm::vec2 &position, const glm::vec2 &size, const Ref<Assets::Texture> &texture, float rotation)
-	{
-		Draw(position, size, glm::vec4{ 1 }, texture, rotation);
-	}
-
-	void Renderer::Draw(const glm::vec2 &position, const glm::vec2 &size, const glm::vec4 &color, const Ref<Texture> &texture, float rotation)
+	void Renderer::Draw(const glm::vec2 &pos, const glm::vec2 &size, const TextureAtlasEntry &tex, const glm::vec4 &tint, float rotation)
 	{
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
+		auto &atlas = *renderer->atlas;
 
-		auto &textures = renderer->textures;
-		auto &textureCount = renderer->textureCount;
-
-		int texIndex = 0;
-		for (; texIndex < textureCount; ++texIndex)
-			if (texture == textures[texIndex])
-				break;
-
-		if (vertexCount >= vertices.capacity() || texIndex >= textures.capacity())
-		{
+		if (vertexCount >= vertices.size())
 			Flush();
-			texIndex = 0;
-		}
-
-		if (texIndex >= textureCount)
-			textures[textureCount++] = texture;
 
 		Vertex &v = vertices[vertexCount];
-		v.dimensions = { position.x, position.y, size.x, size.y };
+		v.dimensions = { pos.x, pos.y, size.x, size.y };
 		v.rotation = rotation;
-		v.color = color;
-		v.texID = (float) texIndex;
-		v.texelSize = { texture->GetWidth(), texture->GetHeight() };
+		v.tint = tint;
+		v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
+		v.texCoords = { tex.x, tex.y, tex.width, tex.height };
 		++vertexCount;
 	}
 
@@ -184,16 +145,9 @@ namespace Ostaga { namespace Graphics {
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
 
-		auto &textures = renderer->textures;
-		auto &textureCount = renderer->textureCount;
-
-		for (int i = 0; i < textureCount; ++i)
-			textures[i]->Bind(i);
-
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
 		glDrawArrays(GL_POINTS, 0, (GLsizei) vertexCount);
 		vertexCount = 0;
-		textureCount = 0;
 	}
 
 } }

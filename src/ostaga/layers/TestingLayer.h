@@ -6,7 +6,7 @@
 #include <graphics/Renderer.h>
 
 #include <assets/Shader.h>
-#include <assets/Texture.h>
+#include <assets/TextureAtlas.h>
 
 #include <util/Ref.h>
 #include <util/Random.h>
@@ -22,8 +22,12 @@ namespace Ostaga {
 	{
 	public:
 		float angle = 0.0f;
-		Ref<Texture> grass;
-		Ref<Texture> tree;
+		Ref<TextureAtlas> atlas;
+
+		TextureAtlasEntry grass;
+		TextureAtlasEntry oaktree;
+		TextureAtlasEntry pinetree;
+		TextureAtlasEntry white;
 
 		float xoffset = 0.0f;
 		float yoffset = 0.0f;
@@ -34,8 +38,14 @@ namespace Ostaga {
 
 		virtual void OnStart()
 		{
-			grass = Texture::LoadFromFile("res/textures/grass.png");
-			tree = Texture::LoadFromFile("res/textures/tree.png");
+			atlas = TextureAtlas::Create("res/textures/atlas.png");
+
+			grass =    atlas->AddEntry({ 1, 1, 16, 16 });
+			oaktree =  atlas->AddEntry({ 32, 0, 64, 64 });
+			pinetree = atlas->AddEntry({ 96, 0, 64, 64 });
+			white =    atlas->AddEntry({ atlas->GetWidth() - 1, atlas->GetHeight() - 1, 1, 1 });
+			
+			Renderer::SetTextureAtlas(atlas);
 		}
 
 		virtual void OnStop()
@@ -54,28 +64,38 @@ namespace Ostaga {
 		{
 			Renderer::BeginScene(glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f));
 			
-			static const int size = 64;
-			static const int width = 2000;
-			static const int height = 2000;
-			static const int tileX = width / size;
-			static const int tileY = height / size;
+			static const int TILE_SIZE = 64;
+			
+			static const int TILES_X = 30;
+			static const int TILES_Y = 22;
+
 			static const int centerX = 1280 / 2;
 			static const int centerY = 720 / 2;
-			static const float spawnChance = 1 / 20.0f;
+			
+			static const float spawnChance = 1 / 5.0f;
 
-			for (float i = -tileX / 2; i < tileX / 2; ++i)
-				for (float j = -tileY / 2; j < tileY / 2; ++j)
-					Renderer::Draw({ size * i + centerX + xoffset,  size * j + centerY + yoffset }, glm::vec2{ size }, grass);
+			for (float i = -TILES_X / 2; i < TILES_X / 2; ++i)
+				for (float j = -TILES_Y / 2; j < TILES_Y / 2; ++j)
+					Renderer::Draw({ TILE_SIZE * i + centerX + xoffset,  TILE_SIZE * j + centerY + yoffset }, glm::vec2{ TILE_SIZE }, grass);
 
 			Random::SetSeed(1);
-			for (float j = -tileY / 2; j < tileY / 2; ++j)
-				for (float i = -tileX / 2; i < tileX / 2; ++i)
+			for (float j = -TILES_Y / 2; j < TILES_Y / 2; ++j)
+			{
+				for (float i = -TILES_X / 2; i < TILES_X / 2; ++i)
+				{
 					if (Random::Float() < spawnChance)
-						Renderer::Draw({ size * i + centerX + xoffset,  size * j + centerY + yoffset }, glm::vec2{ 128 }, tree);
+					{
+						Renderer::Draw(
+							{ TILE_SIZE * i + centerX + xoffset,  TILE_SIZE * j + centerY + yoffset },
+							glm::vec2{ 128 },
+							Random::Float() > 0.5f ? oaktree : pinetree);
+					}
+				}
+			}
 
-			Renderer::Draw({ 210, 25 }, { 400, 30 }, { 1, 0, 0, 1 });
-			Renderer::Draw({ 210, 65 }, { 400, 30 }, { 0, 1, 0, 1 });
-			Renderer::Draw({ 210, 105 }, { 400, 30 }, { 0, 0, 1, 1 });
+			Renderer::Draw({ 210, 25 },  { 400, 30 }, white, { 1, 0, 0, 1 });
+			Renderer::Draw({ 210, 65 },  { 400, 30 }, white, { 0, 1, 0, 1 });
+			Renderer::Draw({ 210, 105 }, { 400, 30 }, white, { 0, 0, 1, 1 });
 
 			Renderer::EndScene();
 		}
