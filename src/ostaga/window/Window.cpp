@@ -11,6 +11,7 @@ namespace Ostaga {
 
 	Window::Window(const WindowProps &props)
 	{
+		PROFILE_FUNCTION();
 		m_Data.props = props;
 		InitWindow();
 	}
@@ -20,6 +21,7 @@ namespace Ostaga {
 	}
 	void Window::Update()
 	{
+		PROFILE_FUNCTION();
 		glfwPollEvents();
 		glfwSwapBuffers(m_WindowPtr);
 
@@ -28,11 +30,12 @@ namespace Ostaga {
 
 	void Window::SetWindowMode(WindowMode mode)
 	{
-		// TODO
+		// TODO: Implement SetWindowMode functionality
 	}
 	
 	void Window::InitWindow()
 	{
+		PROFILE_FUNCTION();
 		if (!s_InitializedGLFW)
 		{
 			int status = glfwInit();
@@ -70,7 +73,7 @@ namespace Ostaga {
 	
 	GLFWwindow *Window::CreateWindowHandle()
 	{
-
+		PROFILE_FUNCTION();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OSTAGA_OPENGL_VERSION_MAJOR);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OSTAGA_OPENGL_VERSION_MINOR);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -141,6 +144,7 @@ namespace Ostaga {
 	}
 	void Window::SetupEventCallback()
 	{
+		PROFILE_FUNCTION();
 		glfwSetWindowUserPointer(m_WindowPtr, (void*) &m_Data);
 
 		glfwSetKeyCallback(m_WindowPtr, [](GLFWwindow *window, int key, int scancode, int action, int mods)

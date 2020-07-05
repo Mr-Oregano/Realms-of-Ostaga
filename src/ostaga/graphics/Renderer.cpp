@@ -50,6 +50,7 @@ namespace Ostaga { namespace Graphics {
 	}
 	void LoadAssets()
 	{
+		PROFILE_FUNCTION();
 		renderer->shader = Shader::LoadFromFiles(
 			"res/shaders/renderer-shader-vert.glsl",
 			"res/shaders/renderer-shader-geom.glsl",
@@ -59,6 +60,7 @@ namespace Ostaga { namespace Graphics {
 	}
 	void CreateBufferStore()
 	{
+		PROFILE_FUNCTION();
 		GLuint &VAO = renderer->VAO;
 		GLuint &VBO = renderer->VBO;
 
@@ -86,6 +88,7 @@ namespace Ostaga { namespace Graphics {
 
 	void Renderer::Init(const RendererProps &props)
 	{
+		PROFILE_FUNCTION();
 		renderer = new RendererData;
 		renderer->vertices.resize(props.batchCapacity);
 
@@ -108,6 +111,7 @@ namespace Ostaga { namespace Graphics {
 
 	void Renderer::BeginScene(const glm::mat4& camera)
 	{
+		PROFILE_FUNCTION();
 		Shader &shader = *renderer->shader;
 		shader.SetUniformMat4("u_ViewProjection", camera);
 	}
@@ -141,12 +145,15 @@ namespace Ostaga { namespace Graphics {
 
 	void Renderer::EndScene()
 	{
+		PROFILE_FUNCTION();
 		if (renderer->vertexCount > 0)
 			Flush();
 	}
 
 	void Renderer::Flush()
 	{
+		PROFILE_FUNCTION();
+
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
 

@@ -3,6 +3,8 @@
 #define OSTAGA_OPENGL_VERSION_MAJOR 4
 #define OSTAGA_OPENGL_VERSION_MINOR 6
 
+#include <util/Profiler.h>
+
 #if defined(OSTAGA_DEBUG) || defined(OSTAGA_RELEASE)
 	#define OSTAGA_IF_DEBUG(x, ...) x
 

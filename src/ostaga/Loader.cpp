@@ -26,10 +26,14 @@ namespace Ostaga {
 	int Load()
 	{
 		LOG_INIT();
+		PROFILER_INIT();
 
-		Application app;
-		app.Run();
+		{
+			Application app;
+			app.Run();
+		}
 
+		PROFILER_SHUTDOWN();
 		LOG_SHUTDOWN();
 		return 0;
 	}

@@ -3,12 +3,12 @@
 #include "ospch.h"
 //
 
+#include <Ostaga.h>
+
 #include "Application.h"
 
 #include <util/TimeStep.h>
-
 #include <layers/TestingLayer.h>
-
 #include <graphics/Renderer.h>
 
 namespace Ostaga {
@@ -17,6 +17,9 @@ namespace Ostaga {
 
 	Application::Application()
 	{
+		PROFILE_SESSION_BEGIN("Ostaga-Startup");
+		PROFILE_FUNCTION();
+
 		s_Current = this;
 
 		WindowProps props = {
@@ -31,6 +34,7 @@ namespace Ostaga {
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
 
 		Renderer::Init({ 10000 });
+		PROFILE_SESSION_END();
 
 	}
 	Application::~Application()

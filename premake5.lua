@@ -11,6 +11,10 @@ workspace "Realms of Ostaga"
 		"Dist"
 	}
 
+	defines {
+		"PROFILE_RESULTS_DIR=\"profile-results\""
+	}
+
 	filter "configurations:Debug"
 		symbols "On"
 		optimize "Off"

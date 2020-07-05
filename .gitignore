@@ -2,6 +2,7 @@
 bin/
 bin-int/
 .vs/
+profile-results/
 
 # files
 *.sln
