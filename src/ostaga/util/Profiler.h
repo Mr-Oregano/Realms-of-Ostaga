@@ -10,36 +10,6 @@
 #include <thread>
 #include <mutex>
 
-#ifndef PROFILE_RESULTS_DIR
-	#define PROFILE_RESULTS_DIR "."
-#endif
-
-#ifdef OSTAGA_RELEASE
-	#define PROFILING 1
-#else
-	#define PROFILING 0
-#endif
-
-#if PROFILING
-	#define PROFILER_INIT() ::Ostaga::Profiler::Init()
-	#define PROFILER_SHUTDOWN() ::Ostaga::Profiler::Shutdown()
-
-	#define PROFILE_SESSION_BEGIN(name) ::Ostaga::Profiler::BeginSession(name, name##".json")
-	#define PROFILE_SESSION_END() ::Ostaga::Profiler::EndSession()
-
-	#define PROFILE_SCOPE(name) ::Ostaga::ProfileTimer timer##__LINE__(name)
-	#define PROFILE_FUNCTION() PROFILE_SCOPE(__FUNCSIG__)
-#else
-	#define PROFILER_SHUTDOWN()
-	#define PROFILER_INIT()
-
-	#define PROFILE_SESSION_BEGIN(name)
-	#define PROFILE_SESSION_END()
-
-	#define PROFILE_SCOPE(name)
-	#define PROFILE_FUNCTION()
-#endif
-
 namespace Ostaga {
 
 	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
