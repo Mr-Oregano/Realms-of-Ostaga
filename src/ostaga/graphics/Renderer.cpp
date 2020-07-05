@@ -3,6 +3,7 @@
 #include "ospch.h"
 //
 
+#define POLYGON_MODE 0
 #include "Renderer.h"
 
 #include <assets/Shader.h>
@@ -41,7 +42,9 @@ namespace Ostaga { namespace Graphics {
 	void SetPipelineState()
 	{
 		// Renderer State
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#if POLYGON_MODE
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	}
@@ -84,7 +87,6 @@ namespace Ostaga { namespace Graphics {
 	void Renderer::Init(const RendererProps &props)
 	{
 		renderer = new RendererData;
-
 		renderer->vertices.resize(props.batchCapacity);
 
 		SetPipelineState();
@@ -112,6 +114,9 @@ namespace Ostaga { namespace Graphics {
 
 	void Renderer::SetTextureAtlas(const Ref<Assets::TextureAtlas> &atlas)
 	{
+		if (renderer->vertexCount > 0)
+			Flush();
+
 		renderer->atlas = atlas;
 		atlas->Bind();
 	}
