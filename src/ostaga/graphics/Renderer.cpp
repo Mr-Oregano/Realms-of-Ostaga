@@ -3,7 +3,7 @@
 #include "ospch.h"
 //
 
-#define POLYGON_MODE 0
+#define WIREFRAME_MODE 0
 #include "Renderer.h"
 
 #include <assets/Shader.h>
@@ -37,12 +37,10 @@ namespace Ostaga { namespace Graphics {
 
 	static RendererData *renderer = nullptr;
 
-	static int MAX_TEXTURE_UNITS = 1;
-
 	void SetPipelineState()
 	{
 		// Renderer State
-#if POLYGON_MODE
+#if WIREFRAME_MODE
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 #endif
 		glEnable(GL_BLEND);

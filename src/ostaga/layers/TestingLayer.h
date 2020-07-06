@@ -43,8 +43,6 @@ namespace Ostaga {
 
 		virtual void OnStart()
 		{
-			PROFILE_SESSION_BEGIN("Ostaga-Runtime");
-
 			atlas = TextureAtlas::Create("res/textures/atlas.png");
 
 			forest_tile =	atlas->AddEntry({ 1, 1, 16, 16 });
@@ -62,7 +60,6 @@ namespace Ostaga {
 
 		virtual void OnStop()
 		{
-			PROFILE_SESSION_END();
 		}
 
 		virtual void OnUpdate(TimeStep ts)
@@ -76,10 +73,9 @@ namespace Ostaga {
 
 		std::pair<TextureAtlasEntry&, float> SpawnEntity()
 		{
-			PROFILE_FUNCTION();
 			float random = Random::Float();
 
-			if (Random::Float() > 0.5f)
+			if (Random::Float() > 0.4f)
 			{
 				if (Random::Float() > 0.75f)
 					return { grass1, 32.0f };
@@ -112,7 +108,7 @@ namespace Ostaga {
 			static const int centerX = 1280 / 2;
 			static const int centerY = 720 / 2;
 			
-			static const float spawnChance = 0.5f;
+			static const float spawnChance = 1.0f;
 
 			for (float i = -TILES_X / 2; i < TILES_X / 2; ++i)
 				for (float j = -TILES_Y / 2; j < TILES_Y / 2; ++j)
@@ -128,7 +124,7 @@ namespace Ostaga {
 						auto [entity, size] = SpawnEntity();
 						Renderer::Draw(
 							{ TILE_SIZE * i + centerX + xoffset,
-							  TILE_SIZE * j + centerY + yoffset },
+							  TILE_SIZE * j + centerY + yoffset - size / 2 },
 							glm::vec2{ size },
 							entity);
 					}
@@ -144,10 +140,23 @@ namespace Ostaga {
 
 		virtual void OnEvent(Event &e)
 		{
-			e.Dispatch<KeyDown>([](KeyDown &e) {
-				if (e.keyCode == GLFW_KEY_W)
+			e.Dispatch<KeyUp>([](KeyUp &e) {
+				if (e.keyCode == GLFW_KEY_Q)
 				{
-					LOG_INFO("Foward");
+					static bool start = false;
+					start = !start;
+
+					if (start)
+					{
+						PROFILE_SESSION_BEGIN("Ostaga-Runtime");
+						LOG_INFO("Start profiling session: Ostaga-Runtime");
+					}
+					else
+					{
+						PROFILE_SESSION_END();
+						LOG_INFO("Ended profiling session: Ostaga-Runtime");
+					}
+					
 					return true;
 				}
 
