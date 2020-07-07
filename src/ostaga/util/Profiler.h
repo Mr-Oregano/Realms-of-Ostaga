@@ -39,17 +39,10 @@ namespace Ostaga {
 		static void WriteProfile(const ProfileResult &result);
 
 	private:
-		static void WriteHeader();
-		static void WriteFooter();
-
-	private:
 		struct Data
 		{
-			std::string name;
-			std::string filepath;
-
-			ProfileSession *currentSession = nullptr;
 			std::ofstream outputStream;
+			ProfileSession *currentSession = nullptr;
 		};
 
 		static Data *s_Data;

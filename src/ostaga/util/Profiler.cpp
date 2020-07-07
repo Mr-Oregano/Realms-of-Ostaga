@@ -25,41 +25,46 @@ namespace Ostaga {
 
 	void Profiler::BeginSession(const std::string &name, const std::string &filepath)
 	{
-		s_Data->name = name;
-		s_Data->filepath = filepath;
-
 		if (s_Data->currentSession) {
 			// If there is already a current session, then close it before beginning new one.
 			// Subsequent profiling output meant for the original session will end up in the
 			// newly opened session instead.  That's better than having badly formatted
 			// profiling output.
 			EndSession();
-			LOG_WARN("Instrumentor::BeginSession('{0}') when session '{1}' already open.", s_Data->name, s_Data->currentSession->name);
+			LOG_WARN("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, s_Data->currentSession->name);
 		}
 
 		if (!std::filesystem::exists(PROFILE_RESULTS_DIR))
 			std::filesystem::create_directory(PROFILE_RESULTS_DIR);
 
 		auto &os = s_Data->outputStream;
-		os.open(PROFILE_RESULTS_DIR + std::string{"/"} + s_Data->filepath);
+		os.open(PROFILE_RESULTS_DIR + std::string{"/"} + filepath);
 
 		if (os.is_open()) {
 
-			s_Data->currentSession = new ProfileSession({ s_Data->name });
-			WriteHeader();
+			s_Data->currentSession = new ProfileSession({ name });
+
+			// Write Header
+			os << "{\"otherData\": {},\"traceEvents\":[{}";
+			os.flush();
+			
 			return;
 
 		}
 
-		LOG_ERROR("Instrumentor could not open results file '{0}'.", s_Data->filepath);
+		LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
 	}
 
 	void Profiler::EndSession()
 	{
 		if (s_Data->currentSession)
 		{
-			WriteFooter();
-			s_Data->outputStream.close();
+			// Write Footer
+			auto &os = s_Data->outputStream;
+			os << "]}";
+			os.flush();
+
+			os.close();
 			delete s_Data->currentSession; s_Data->currentSession = nullptr;
 		}
 	}
@@ -91,20 +96,6 @@ namespace Ostaga {
 			os << json.str();
 			os.flush();
 		}
-	}
-
-	void Profiler::WriteHeader()
-	{
-		auto &os = s_Data->outputStream;
-		os << "{\"otherData\": {},\"traceEvents\":[{}";
-		os.flush();
-	}
-
-	void Profiler::WriteFooter()
-	{
-		auto &os = s_Data->outputStream;
-		os << "]}";
-		os.flush();
 	}
 
 	ProfileTimer::ProfileTimer(const std::string &name)
