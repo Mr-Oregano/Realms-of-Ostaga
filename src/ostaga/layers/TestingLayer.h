@@ -66,7 +66,7 @@ namespace Ostaga {
 		{
 			PROFILE_FUNCTION();
 			static float angle = 0.0f;
-			angle += glm::radians(50.0f * ts);
+			angle += glm::radians(25.0f * ts);
 			xoffset = 256 * glm::cos(angle);
 			yoffset = 256 * glm::sin(angle);
 		}

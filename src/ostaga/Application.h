@@ -33,6 +33,7 @@ namespace Ostaga
 	private:
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = false;
+		bool m_Iconified = false;
 
 		LayerStack m_Layers;
 

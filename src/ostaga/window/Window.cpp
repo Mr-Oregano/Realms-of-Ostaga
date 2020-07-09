@@ -225,12 +225,20 @@ namespace Ostaga {
 		glfwSetWindowCloseCallback(m_WindowPtr, [](GLFWwindow *window)
 		{
 			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-
 			WindowClose event;
 
 			if (data.EventCallback)
 				data.EventCallback(event);
 		});
+		glfwSetWindowIconifyCallback(m_WindowPtr, [](GLFWwindow *window, int iconified)
+		{
+			WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+			WindowIconified event{ (bool) iconified };
+
+			if (data.EventCallback)
+				data.EventCallback(event);
+		});
+		
 
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds

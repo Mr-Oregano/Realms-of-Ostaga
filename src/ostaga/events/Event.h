@@ -14,7 +14,8 @@ namespace Ostaga {
 		MouseMove,
 		MouseScrolled,
 
-		WindowClose
+		WindowClose,
+		WindowIconified
 	};
 	enum class EventCategory
 	{

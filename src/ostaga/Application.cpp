@@ -27,7 +27,7 @@ namespace Ostaga {
 			720,
 			"Realms of Ostaga",
 			OSTAGA_IF_DEBUG(WindowMode::Windowed, WindowMode::WindowedFullscreen),
-			false 
+			true 
 		};
 
 		m_Window = std::make_unique<Window>(props);
@@ -45,13 +45,22 @@ namespace Ostaga {
 	void Application::Update(TimeStep ts)
 	{
 		m_Layers.OnUpdate(ts);
-		m_Layers.OnRender();
+
+		// No need to be renderering if the window is
+		// minimized.
+		if (!m_Iconified)
+			m_Layers.OnRender();
 	}
 
 	void Application::OnEvent(Event &e)
 	{
 		if (e.GetType() == EventType::WindowClose)
 			m_Running = false;
+
+		e.Dispatch<WindowIconified>([&](WindowIconified& e){
+			m_Iconified = e.iconified;
+			return true;
+		});
 
 		m_Layers.OnEvent(e);
 	}
