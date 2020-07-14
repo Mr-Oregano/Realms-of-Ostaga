@@ -11,3 +11,6 @@
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "vendor/openal-soft"]
+	path = vendor/openal-soft
+	url = https://gitlab.com/Sympleque/openal-soft.git

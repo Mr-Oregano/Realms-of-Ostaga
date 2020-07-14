@@ -46,3 +46,4 @@ The following is a list of 3rd party dependencies that *are* used in this projec
  - [ImGUI](https://gitlab.com/Sympleque/imgui)
  - [glm](https://github.com/g-truc/glm)
  - [stb](https://github.com/nothings/stb)
+ - [openal-soft](https://gitlab.com/Sympleque/openal-soft)
