@@ -9,7 +9,7 @@
 
 #include <util/TimeStep.h>
 #include <layers/TestingLayer.h>
-#include <graphics/Renderer.h>
+#include <renderer/Renderer.h>
 
 namespace Ostaga {
 

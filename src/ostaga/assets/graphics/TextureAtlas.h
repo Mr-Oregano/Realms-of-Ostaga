@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <assets/Texture.h>
+#include <assets/graphics/Texture.h>
 
 #include <util/Maths.h>
 #include <util/Ref.h>

@@ -3,7 +3,7 @@
 #include <util/Maths.h>
 #include <util/Ref.h>
 
-#include <assets/TextureAtlas.h>
+#include <assets/graphics/TextureAtlas.h>
 
 namespace Ostaga { namespace Graphics {
 

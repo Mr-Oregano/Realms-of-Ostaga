@@ -3,10 +3,10 @@
 #include <Ostaga.h>
 
 #include <layers/Layer.h>
-#include <graphics/Renderer.h>
+#include <renderer/Renderer.h>
 
-#include <assets/Shader.h>
-#include <assets/TextureAtlas.h>
+#include <assets/graphics/Shader.h>
+#include <assets/graphics/TextureAtlas.h>
 
 #include <util/Ref.h>
 #include <util/Random.h>

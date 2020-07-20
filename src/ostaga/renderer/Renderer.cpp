@@ -6,7 +6,7 @@
 #define WIREFRAME_MODE 0
 #include "Renderer.h"
 
-#include <assets/Shader.h>
+#include <assets/graphics/Shader.h>
 
 #include <glad/glad.h>
 
