@@ -3,7 +3,8 @@
 #include <Ostaga.h>
 
 #include <layers/Layer.h>
-#include <renderer/Renderer.h>
+#include <engine/Renderer.h>
+#include <engine/AudioMaster.h>
 
 #include <assets/graphics/Shader.h>
 #include <assets/graphics/TextureAtlas.h>
@@ -15,7 +16,7 @@
 
 namespace Ostaga {
 
-	using namespace Graphics;
+	using namespace Engine;
 	using namespace Assets;
 
 	class TestingLayer : public Layer
@@ -23,6 +24,7 @@ namespace Ostaga {
 	public:
 		float angle = 0.0f;
 		Ref<TextureAtlas> atlas;
+		Ref<Audio> monster;
 
 		TextureAtlasEntry forest_tile{ 0 };
 		TextureAtlasEntry grass1{ 0 };
@@ -44,6 +46,7 @@ namespace Ostaga {
 		virtual void OnStart()
 		{
 			atlas = TextureAtlas::Create("res/textures/atlas.png");
+			monster = Audio::LoadFromFile("res/sounds/mnstr2.wav");
 
 			forest_tile =	atlas->AddEntry({ 1, 1, 16, 16 });
 			oaktree =		atlas->AddEntry({ 32, 0, 64, 64 });
@@ -159,9 +162,24 @@ namespace Ostaga {
 					
 					return true;
 				}
-
+				
 				return false;
 			});
+
+			e.Dispatch<MouseUp>([&](MouseUp &e) {
+				if (e.button == GLFW_MOUSE_BUTTON_1)
+				{
+					float x = ((float) e.x / 1280.0f) - 0.5f;
+					float z = ((float) e.y / 720.0f) - 0.5f;
+					monster->SetSourcePosition({ 5.0f * x, 1.0f, 5.0f * z });
+					AudioMaster::Play(monster);
+					return true;
+				}
+
+				return false;
+
+			});
+
 		}
 	};
 }

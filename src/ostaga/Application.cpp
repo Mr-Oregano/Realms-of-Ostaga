@@ -9,7 +9,9 @@
 
 #include <util/TimeStep.h>
 #include <layers/TestingLayer.h>
-#include <renderer/Renderer.h>
+
+#include <engine/Renderer.h>
+#include <engine/AudioMaster.h>
 
 namespace Ostaga {
 
@@ -33,6 +35,7 @@ namespace Ostaga {
 		m_Window = std::make_unique<Window>(props);
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
 
+		AudioMaster::Init();
 		Renderer::Init({ 10000 });
 		PROFILE_SESSION_END();
 
@@ -40,6 +43,7 @@ namespace Ostaga {
 	Application::~Application()
 	{
 		Renderer::Shutdown();
+		AudioMaster::Shudown();
 	}
 
 	void Application::Update(TimeStep ts)
