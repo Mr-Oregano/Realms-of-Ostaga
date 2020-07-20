@@ -13,7 +13,7 @@ This will ensure that all necessary dependencies are downloaded along with the p
 ### System Requirements
 ---
 
-The goal for this project is to have cross-platform support. That being said, it will primarily be tested on Windows 10 before being tested on other platforms.
+The goal for this project is to have cross-platform support. That being said, it will primarily be tested on Windows 10 before being tested on other platforms. Some of the premake files may need tinkering at the moment in order to build for platforms other than vs2019.
 
 This project will also be using the latest version of OpenGL (4.6 as of this time) for the development process. This may be subject to change in the final product.
 
@@ -47,3 +47,4 @@ The following is a list of 3rd party dependencies that *are* used in this projec
  - [glm](https://github.com/g-truc/glm)
  - [stb](https://github.com/nothings/stb)
  - [openal-soft](https://gitlab.com/Sympleque/openal-soft)
+ - [dr_wav](https://github.com/mackron/dr_libs/blob/master/dr_wav.h)
