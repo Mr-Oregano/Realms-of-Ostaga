@@ -39,7 +39,8 @@ workspace "Realms of Ostaga"
 		include "vendor/glfw"
 		include "vendor/glad"
 		include "vendor/stb_image"
-
+		include "vendor/openal-soft"
+		include "vendor/dr_wav"
 	group ""
 
 project "Realms of Ostaga"
@@ -71,14 +72,18 @@ project "Realms of Ostaga"
 		"vendor/spdlog/include",
 		"vendor/stb_image/include",
 		"vendor/imgui",
-		"vendor/glm"
+		"vendor/glm",
+		"vendor/openal-soft/include",
+		"vendor/dr_wav/include"
 	}
 
 	links {
 		"GLFW",
 		"glad",
 		"stb_image",
-		"opengl32.lib"
+		"opengl32.lib",
+		"openal-soft",
+		"dr_wav"
 	}
 
 	pchheader "ospch.h"
