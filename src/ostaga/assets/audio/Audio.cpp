@@ -9,7 +9,9 @@
 
 namespace Ostaga { namespace Assets {
 
+	// Audio buffers will be cached for re-use
 	std::unordered_map<std::string, ALuint> Audio::s_Buffers;
+	//
 
 	Audio::Audio(ALuint buffer, const AudioProps &props)
 		: m_BufferID(buffer), m_Props(props)
@@ -75,8 +77,8 @@ namespace Ostaga { namespace Assets {
 			size_t size = wav.totalPCMFrameCount * wav.channels * sizeof(drwav_uint16);
 
 			drwav_read_pcm_frames_s16(&wav, wav.totalPCMFrameCount, data);
-			alBufferData(buffer, format, (ALvoid *)data, (ALsizei)size, wav.sampleRate);
 			alGenBuffers(1, &buffer);
+			alBufferData(buffer, format, (ALvoid *)data, (ALsizei)size, wav.sampleRate);
 			delete[] data;
 			s_Buffers.insert({ path, buffer });
 		}
