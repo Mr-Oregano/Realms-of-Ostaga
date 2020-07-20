@@ -6,9 +6,10 @@
 #include "Audio.h"
 
 #include <Ostaga.h>
-#include <engine/AudioMaster.h>
 
 namespace Ostaga { namespace Assets {
+
+	std::unordered_map<std::string, ALuint> Audio::s_Buffers;
 
 	Audio::Audio(ALuint buffer, const AudioProps &props)
 		: m_BufferID(buffer), m_Props(props)
@@ -53,23 +54,33 @@ namespace Ostaga { namespace Assets {
 			return nullptr;
 		}
 
-		ALuint buffer = AudioMaster::GetBuffer(path);
-		ALenum format = AL_FORMAT_MONO16;
-		
-		switch (wav.channels)
+		ALuint buffer = 0;
+
+		auto it = s_Buffers.find(path);
+		if (it != s_Buffers.end())
 		{
-			case 1: format = AL_FORMAT_MONO16; break;
-			case 2: format = AL_FORMAT_STEREO16; break;
-			default: LOG_WARN("Unknown audio format, using AL_FORMAT_MONO16");
+			buffer = it->second;
+		}
+		else
+		{
+			ALenum format = AL_FORMAT_MONO16;
+			switch (wav.channels)
+			{
+				case 1: format = AL_FORMAT_MONO16; break;
+				case 2: format = AL_FORMAT_STEREO16; break;
+				default: LOG_WARN("Unknown audio format, using AL_FORMAT_MONO16");
+			}
+
+			drwav_int16 *data = new drwav_int16[wav.totalPCMFrameCount * wav.channels]{ 0 };
+			size_t size = wav.totalPCMFrameCount * wav.channels * sizeof(drwav_uint16);
+
+			drwav_read_pcm_frames_s16(&wav, wav.totalPCMFrameCount, data);
+			alBufferData(buffer, format, (ALvoid *)data, (ALsizei)size, wav.sampleRate);
+			alGenBuffers(1, &buffer);
+			delete[] data;
+			s_Buffers.insert({ path, buffer });
 		}
 
-		drwav_int16 *data = new drwav_int16[wav.totalPCMFrameCount * wav.channels]{ 0 };
-		size_t size = wav.totalPCMFrameCount * wav.channels * sizeof(drwav_uint16);
-		
-		drwav_read_pcm_frames_s16(&wav, wav.totalPCMFrameCount, data);
-		alBufferData(buffer, format, (ALvoid *)data, (ALsizei)size, wav.sampleRate);
-		
-		delete[] data;
 		return CreateRef<Audio>(buffer, props);
 	}
 } }

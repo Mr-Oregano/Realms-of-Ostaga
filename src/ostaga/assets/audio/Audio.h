@@ -38,6 +38,7 @@ namespace Ostaga { namespace Assets {
 
 	public:
 		static Ref<Audio> LoadFromFile(const std::string &path, const AudioProps &props = { AudioMode::Normal });
+		static std::unordered_map<std::string, ALuint> s_Buffers;
 
 	};
 } }

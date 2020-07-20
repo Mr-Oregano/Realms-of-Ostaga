@@ -14,7 +14,6 @@ namespace Ostaga { namespace Assets {
     public:
         static void Init();
         static void Shudown();
-        static ALuint GetBuffer(const std::string& name);
 
         static void Play(const Ref<Audio>& audio);
         static void Pause(const Ref<Audio> &audio);

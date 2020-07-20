@@ -4,7 +4,6 @@
 //
 
 #include <Ostaga.h>
-#include <unordered_map>
 
 #include "AudioMaster.h"
 
@@ -16,9 +15,7 @@ namespace Ostaga { namespace Assets {
 	struct AudioMasterData
 	{
 		ALCdevice *device = nullptr;
-		ALCcontext *context = nullptr;
-
-		std::unordered_map<std::string, ALuint> buffers;
+		ALCcontext *context = nullptr;		
 	};
 
 	static AudioMasterData *audiomaster = nullptr;
@@ -54,22 +51,6 @@ namespace Ostaga { namespace Assets {
 		alcCloseDevice(audiomaster->device);
 
 		delete audiomaster; audiomaster = nullptr;
-	}
-
-	ALuint AudioMaster::GetBuffer(const std::string &name)
-	{
-		auto it = audiomaster->buffers.find(name);
-		if (it != audiomaster->buffers.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			ALuint buffer = 0;
-			alGenBuffers(1, &buffer);
-			audiomaster->buffers.insert({ name, buffer });
-			return buffer;
-		}
 	}
 
 	void AudioMaster::Play(const Ref<Audio> &audio)
