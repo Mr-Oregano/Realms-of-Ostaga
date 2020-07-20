@@ -22,6 +22,7 @@ namespace Ostaga { namespace Assets {
 
 	void AudioMaster::Init()
 	{
+		PROFILE_FUNCTION();
 		audiomaster = new AudioMasterData;
 
 		audiomaster->device = alcOpenDevice(nullptr); // Select the default audio device
@@ -76,5 +77,6 @@ namespace Ostaga { namespace Assets {
 	
 	void AudioMaster::Update()
 	{
+		PROFILE_FUNCTION();
 	}
 } }

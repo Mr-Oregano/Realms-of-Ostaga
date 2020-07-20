@@ -166,12 +166,12 @@ namespace Ostaga {
 				return false;
 			});
 
-			e.Dispatch<MouseUp>([&](MouseUp &e) {
+			e.Dispatch<MouseDown>([&](MouseDown &e) {
 				if (e.button == GLFW_MOUSE_BUTTON_1)
 				{
 					float x = ((float) e.x / 1280.0f) - 0.5f;
 					float z = ((float) e.y / 720.0f) - 0.5f;
-					monster->SetSourcePosition({ 5.0f * x, 1.0f, 5.0f * z });
+					monster->SetSourcePosition({ 10.0f * x, 1.0f, 10.0f * z });
 					AudioMaster::Play(monster);
 					return true;
 				}
