@@ -10,7 +10,9 @@
 #include <AL/alc.h>
 #include <AL/al.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Engine {
+
+	using namespace Assets;
 
 	struct AudioMasterData
 	{

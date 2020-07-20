@@ -7,7 +7,7 @@
 #include <assets/audio/Audio.h>
 #include <util/Ref.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Engine {
 
     class AudioMaster
     {
@@ -15,9 +15,9 @@ namespace Ostaga { namespace Assets {
         static void Init();
         static void Shudown();
 
-        static void Play(const Ref<Audio>& audio);
-        static void Pause(const Ref<Audio> &audio);
-        static void Stop(const Ref<Audio> &audio);
+        static void Play(const Ref<Assets::Audio>& audio);
+        static void Pause(const Ref<Assets::Audio> &audio);
+        static void Stop(const Ref<Assets::Audio> &audio);
 
         static void Update();
     };
