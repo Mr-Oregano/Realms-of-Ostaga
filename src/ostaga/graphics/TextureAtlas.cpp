@@ -5,7 +5,7 @@
 
 #include "TextureAtlas.h"
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 	
 	TextureAtlas::TextureAtlas(const Ref<Texture>& atlas)
 		: m_Atlas(atlas)

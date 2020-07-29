@@ -6,13 +6,9 @@
 #define WIREFRAME_MODE 0
 #include "Renderer.h"
 
-#include <assets/graphics/Shader.h>
-
 #include <glad/glad.h>
 
-namespace Ostaga { namespace Engine {
-
-	using namespace Assets;
+namespace Ostaga { namespace Graphics {
 
 	struct Vertex
 	{
@@ -114,7 +110,7 @@ namespace Ostaga { namespace Engine {
 		shader.SetUniformMat4("u_ViewProjection", camera);
 	}
 
-	void Renderer::SetTextureAtlas(const Ref<Assets::TextureAtlas> &atlas)
+	void Renderer::SetTextureAtlas(const Ref<TextureAtlas> &atlas)
 	{
 		if (renderer->vertexCount > 0)
 			Flush();

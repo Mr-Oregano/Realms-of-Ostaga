@@ -9,7 +9,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 
 	class Shader
 	{

@@ -3,9 +3,10 @@
 #include <util/Maths.h>
 #include <util/Ref.h>
 
-#include <assets/graphics/TextureAtlas.h>
+#include <graphics/TextureAtlas.h>
+#include <graphics/Shader.h>
 
-namespace Ostaga { namespace Engine {
+namespace Ostaga { namespace Graphics {
 
 	struct RendererProps
 	{
@@ -19,13 +20,13 @@ namespace Ostaga { namespace Engine {
 		static void Shutdown();
 
 		static void BeginScene(const glm::mat4 &camera);
-		static void SetTextureAtlas(const Ref<Assets::TextureAtlas>& atlas);
+		static void SetTextureAtlas(const Ref<TextureAtlas>& atlas);
 
 		// Rotations are expected in radians.
 		static void Draw(
 			const glm::vec2 &pos, 
 			const glm::vec2 &size, 
-			const Assets::TextureAtlasEntry &tex, 
+			const TextureAtlasEntry &tex, 
 			const glm::vec4 &tint = glm::vec4{1.0f}, 
 			float rotation = 0);
 		

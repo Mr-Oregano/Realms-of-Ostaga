@@ -9,7 +9,7 @@
 
 #include <stb_image.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 
     Texture::Texture(unsigned char *data, int width, int height, int channels, const TextureProps &props)
         : m_Width(width), m_Height(height), m_Channels(channels), m_Props(props)

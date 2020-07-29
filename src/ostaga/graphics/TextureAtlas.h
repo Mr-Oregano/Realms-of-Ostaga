@@ -2,12 +2,12 @@
 
 #include <vector>
 
-#include <assets/graphics/Texture.h>
+#include <graphics/Texture.h>
 
 #include <util/Maths.h>
 #include <util/Ref.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 
 	struct TextureAtlasEntry
 	{

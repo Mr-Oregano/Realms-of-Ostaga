@@ -10,8 +10,8 @@
 #include <util/TimeStep.h>
 #include <layers/TestingLayer.h>
 
-#include <engine/Renderer.h>
-#include <engine/AudioMaster.h>
+#include <audio/AudioMaster.h>
+#include <graphics/Renderer.h>
 
 namespace Ostaga {
 

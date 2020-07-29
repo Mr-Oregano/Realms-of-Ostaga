@@ -3,11 +3,13 @@
 #include <Ostaga.h>
 
 #include <layers/Layer.h>
-#include <engine/Renderer.h>
-#include <engine/AudioMaster.h>
 
-#include <assets/graphics/Shader.h>
-#include <assets/graphics/TextureAtlas.h>
+#include <graphics/Renderer.h>
+#include <graphics/Shader.h>
+#include <graphics/TextureAtlas.h>
+
+#include <audio/Audio.h>
+#include <audio/AudioMaster.h>
 
 #include <util/Ref.h>
 #include <util/Random.h>
@@ -16,15 +18,15 @@
 
 namespace Ostaga {
 
-	using namespace Engine;
-	using namespace Assets;
+	using namespace Graphics;
+	using namespace Audio;
 
 	class TestingLayer : public Layer
 	{
 	public:
 		float angle = 0.0f;
 		Ref<TextureAtlas> atlas;
-		Ref<Audio> monster;
+		Ref<AudioSource> monster;
 
 		TextureAtlasEntry forest_tile{ 0 };
 		TextureAtlasEntry grass1{ 0 };
@@ -46,7 +48,7 @@ namespace Ostaga {
 		virtual void OnStart()
 		{
 			atlas = TextureAtlas::Create("res/textures/atlas.png");
-			monster = Audio::LoadFromFile("res/sounds/mnstr2.wav");
+			monster = AudioSource::LoadFromFile("res/sounds/mnstr2.wav");
 
 			forest_tile =	atlas->AddEntry({ 1, 1, 16, 16 });
 			oaktree =		atlas->AddEntry({ 32, 0, 64, 64 });

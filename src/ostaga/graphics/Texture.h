@@ -6,7 +6,7 @@
 
 #include <glad/glad.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 
 	enum class Filter
 	{

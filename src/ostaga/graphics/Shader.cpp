@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Graphics {
 
 	Shader::Shader()
 		: m_ContextID(glCreateProgram())

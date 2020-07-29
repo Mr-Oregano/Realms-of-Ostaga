@@ -7,13 +7,13 @@
 
 #include <Ostaga.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Audio {
 
 	// Audio buffers will be cached for re-use
-	std::unordered_map<std::string, ALuint> Audio::s_Buffers;
+	std::unordered_map<std::string, ALuint> AudioSource::s_Buffers;
 	//
 
-	Audio::Audio(ALuint buffer, const AudioProps &props)
+	AudioSource::AudioSource(ALuint buffer, const AudioProps &props)
 		: m_BufferID(buffer), m_Props(props)
 	{
 		alGenSources(1, &m_ContextID);
@@ -25,29 +25,29 @@ namespace Ostaga { namespace Assets {
 		alSourcei(m_ContextID, AL_LOOPING, props.mode == AudioMode::Loop ? AL_TRUE : AL_FALSE);
 	}
 
-	Audio::~Audio()
+	AudioSource::~AudioSource()
 	{
 		alDeleteSources(1, &m_ContextID);
 	}
 
-	bool Audio::IsPlaying()
+	bool AudioSource::IsPlaying()
 	{
 		ALenum state;
 		alGetSourcei(m_ContextID, AL_SOURCE_STATE, &state);
 		return state == AL_PLAYING;
 	}
 
-	void Audio::SetGain(float gain)
+	void AudioSource::SetGain(float gain)
 	{
 		alSourcef(m_ContextID, AL_GAIN, gain);
 	}
 
-	void Audio::SetSourcePosition(const glm::vec3 &pos)
+	void AudioSource::SetSourcePosition(const glm::vec3 &pos)
 	{
 		alSource3f(m_ContextID, AL_POSITION, pos.x, pos.y, pos.z);
 	}
 
-	Ref<Audio> Audio::LoadFromFile(const std::string &path, const AudioProps &props)
+	Ref<AudioSource> AudioSource::LoadFromFile(const std::string &path, const AudioProps &props)
 	{
 		drwav wav;
 		if (!drwav_init_file(&wav, path.c_str(), nullptr))
@@ -83,6 +83,6 @@ namespace Ostaga { namespace Assets {
 			s_Buffers.insert({ path, buffer });
 		}
 
-		return CreateRef<Audio>(buffer, props);
+		return CreateRef<AudioSource>(buffer, props);
 	}
 } }

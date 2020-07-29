@@ -10,9 +10,7 @@
 #include <AL/alc.h>
 #include <AL/al.h>
 
-namespace Ostaga { namespace Engine {
-
-	using namespace Assets;
+namespace Ostaga { namespace Audio {
 
 	struct AudioMasterData
 	{
@@ -56,7 +54,7 @@ namespace Ostaga { namespace Engine {
 		delete audiomaster; audiomaster = nullptr;
 	}
 
-	void AudioMaster::Play(const Ref<Audio> &audio)
+	void AudioMaster::Play(const Ref<AudioSource> &audio)
 	{
 		if (audio->IsPlaying())
 			return;
@@ -64,12 +62,12 @@ namespace Ostaga { namespace Engine {
 		alSourcePlay(audio->GetContextID());
 	}
 
-	void AudioMaster::Pause(const Ref<Audio> &audio)
+	void AudioMaster::Pause(const Ref<AudioSource> &audio)
 	{
 		alSourcePause(audio->GetContextID());
 	}
 
-	void AudioMaster::Stop(const Ref<Audio> &audio)
+	void AudioMaster::Stop(const Ref<AudioSource> &audio)
 	{
 		if (!audio->IsPlaying())
 			return;

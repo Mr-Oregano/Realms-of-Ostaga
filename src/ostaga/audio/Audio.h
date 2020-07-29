@@ -6,7 +6,7 @@
 #include <util/Maths.h>
 #include <util/Ref.h>
 
-namespace Ostaga { namespace Assets {
+namespace Ostaga { namespace Audio {
 
 	enum class AudioMode
 	{
@@ -18,11 +18,11 @@ namespace Ostaga { namespace Assets {
 		AudioMode mode;
 	};
 
-	class Audio
+	class AudioSource
 	{
 	public:
-		Audio(ALuint buffer, const AudioProps& props);
-		~Audio();
+		AudioSource(ALuint buffer, const AudioProps& props);
+		~AudioSource();
 
 		inline ALuint GetContextID() { return m_ContextID; }
 
@@ -37,7 +37,7 @@ namespace Ostaga { namespace Assets {
 		AudioProps m_Props;
 
 	public:
-		static Ref<Audio> LoadFromFile(const std::string &path, const AudioProps &props = { AudioMode::Normal });
+		static Ref<AudioSource> LoadFromFile(const std::string &path, const AudioProps &props = { AudioMode::Normal });
 		static std::unordered_map<std::string, ALuint> s_Buffers;
 
 	};
