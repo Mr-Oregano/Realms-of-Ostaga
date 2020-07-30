@@ -79,7 +79,7 @@ namespace Ostaga { namespace Audio {
 		audio->running = false;
 		audio->runner.join();
 
-		alcMakeContextCurrent(audio->context);
+		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(audio->context);
 		alcCloseDevice(audio->device);
 
@@ -88,7 +88,7 @@ namespace Ostaga { namespace Audio {
 
 	void AudioDevice::SetGain(float gain)
 	{
-		alListenerf(AL_GAIN, gain);
+		AL_CALL(alListenerf(AL_GAIN, gain));
 	}
 
 	// TODO: Not really the best to stall the main thread when unregistering/registering streams
