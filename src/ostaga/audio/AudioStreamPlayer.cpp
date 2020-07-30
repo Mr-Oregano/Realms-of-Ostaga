@@ -4,7 +4,7 @@
 //
 
 #include "AudioStreamPlayer.h"
-#include <audio/AudioDevice.h>
+#include <AudioDevice.h>
 
 #include <utility>
 

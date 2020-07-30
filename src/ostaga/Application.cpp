@@ -7,11 +7,11 @@
 
 #include "Application.h"
 
-#include <util/TimeStep.h>
-#include <layers/TestingLayer.h>
+#include <TimeStep.h>
+#include <TestingLayer.h>
 
-#include <audio/AudioDevice.h>
-#include <graphics/Renderer.h>
+#include <AudioDevice.h>
+#include <Renderer.h>
 
 namespace Ostaga {
 

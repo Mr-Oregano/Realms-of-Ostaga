@@ -2,12 +2,12 @@
 
 #include <Ostaga.h>
 
-#include <events/Event.h>
-#include <events/KeyEvent.h>
-#include <events/MouseEvent.h>
-#include <events/SystemEvent.h>
+#include <Event.h>
+#include <KeyEvent.h>
+#include <MouseEvent.h>
+#include <SystemEvent.h>
 
-#include <util/TimeStep.h>
+#include <TimeStep.h>
 
 namespace Ostaga {
 

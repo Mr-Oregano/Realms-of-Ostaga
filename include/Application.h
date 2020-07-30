@@ -1,7 +1,7 @@
 #pragma once
 
-#include <window/Window.h>
-#include <layers/Layer.h>
+#include <Window.h>
+#include <Layer.h>
 
 #include <memory>
 

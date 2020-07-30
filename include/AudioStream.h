@@ -1,10 +1,10 @@
 #pragma once
 
-#include <audio/IAudioLoader.h>
+#include <IAudioLoader.h>
 
 #include <AL/al.h>
 
-#include <util/Ref.h>
+#include <Ref.h>
 
 namespace Ostaga { namespace Audio {
 

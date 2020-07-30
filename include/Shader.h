@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Ostaga.h>
-#include <util/Ref.h>
-#include <util/Maths.h>
+#include <Ref.h>
+#include <Maths.h>
 
 #include <glad/glad.h>
 

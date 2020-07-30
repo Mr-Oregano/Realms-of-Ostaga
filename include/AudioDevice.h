@@ -1,6 +1,6 @@
 #pragma once
 
-#include <audio/AudioStreamPlayer.h>
+#include <AudioStreamPlayer.h>
 
 #include <AL/al.h>
 

@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include <graphics/Texture.h>
+#include <Texture.h>
 
-#include <util/Maths.h>
-#include <util/Ref.h>
+#include <Maths.h>
+#include <Ref.h>
 
 namespace Ostaga { namespace Graphics {
 

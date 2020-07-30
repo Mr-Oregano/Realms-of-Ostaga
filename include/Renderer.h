@@ -1,10 +1,10 @@
 #pragma once
 
-#include <util/Maths.h>
-#include <util/Ref.h>
+#include <Maths.h>
+#include <Ref.h>
 
-#include <graphics/TextureAtlas.h>
-#include <graphics/Shader.h>
+#include <TextureAtlas.h>
+#include <Shader.h>
 
 namespace Ostaga { namespace Graphics {
 

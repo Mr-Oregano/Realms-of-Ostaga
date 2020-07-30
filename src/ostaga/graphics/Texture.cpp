@@ -5,7 +5,7 @@
 
 #include "Texture.h"
 
-#include <util/Logger.h>
+#include <Ostaga.h>
 
 #include <stb_image.h>
 

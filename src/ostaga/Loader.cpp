@@ -16,7 +16,7 @@
 #endif
 
 #include <Ostaga.h>
-#include <window/Window.h>
+#include <Window.h>
 #include <Application.h>
 
 #include <Main.h>

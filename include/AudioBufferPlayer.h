@@ -1,7 +1,7 @@
 #pragma once
 
-#include <audio/IAudioLoader.h>
-#include <audio/IAudioPlayer.h>
+#include <IAudioLoader.h>
+#include <IAudioPlayer.h>
 
 #include <AL/al.h>
 

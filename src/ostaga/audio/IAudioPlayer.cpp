@@ -5,12 +5,12 @@
 
 #include "IAudioPlayer.h"
 
-#include <audio/IAudioLoader.h>
-#include <audio/AudioStreamPlayer.h>
-#include <audio/AudioBufferPlayer.h>
+#include <IAudioLoader.h>
+#include <AudioStreamPlayer.h>
+#include <AudioBufferPlayer.h>
 
 #include <Ostaga.h>
-#include <util/Ref.h>
+#include <Ref.h>
 
 namespace Ostaga { namespace Audio {
 

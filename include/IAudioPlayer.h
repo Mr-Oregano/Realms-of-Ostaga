@@ -3,8 +3,8 @@
 #include <AL/al.h>
 #include <string>
 
-#include <util/Ref.h>
-#include <util/Maths.h>
+#include <Ref.h>
+#include <Maths.h>
 
 namespace Ostaga { namespace Audio {
 

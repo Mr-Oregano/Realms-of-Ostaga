@@ -2,6 +2,8 @@
 
 #include <Ostaga.h>
 
+#include <functional>
+
 namespace Ostaga {
 
 	enum class EventType

@@ -59,13 +59,16 @@ project "Realms of Ostaga"
 	filter {}
 
 	files {
-		"src/**.h",
-		"src/**.cpp"
+		"include/**.h",
+		"src/**.cpp",
+
+		"tests/**.h",
+		"tests/**.cpp"
 	}
 
 	includedirs {
-		"src",
-		"src/ostaga",
+		"include",
+		"tests",
 
 		"vendor/glfw/include",
 		"vendor/glad/include",

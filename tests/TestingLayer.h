@@ -2,19 +2,19 @@
 
 #include <Ostaga.h>
 
-#include <layers/Layer.h>
+#include <Layer.h>
 
-#include <graphics/Renderer.h>
-#include <graphics/Shader.h>
-#include <graphics/TextureAtlas.h>
+#include <Renderer.h>
+#include <Shader.h>
+#include <TextureAtlas.h>
 
-#include <audio/AudioDevice.h>
-#include <audio/IAudioPlayer.h>
+#include <AudioDevice.h>
+#include <IAudioPlayer.h>
 
-#include <util/Ref.h>
-#include <util/Random.h>
+#include <Ref.h>
+#include <Random.h>
 
-#include <events/KeyEvent.h>
+#include <KeyEvent.h>
 
 namespace Ostaga {
 
