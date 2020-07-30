@@ -8,8 +8,8 @@
 #include <graphics/Shader.h>
 #include <graphics/TextureAtlas.h>
 
-#include <audio/Audio.h>
-#include <audio/AudioMaster.h>
+#include <audio/AudioDevice.h>
+#include <audio/IAudioPlayer.h>
 
 #include <util/Ref.h>
 #include <util/Random.h>
@@ -26,7 +26,8 @@ namespace Ostaga {
 	public:
 		float angle = 0.0f;
 		Ref<TextureAtlas> atlas;
-		Ref<AudioSource> monster;
+		Ref<IAudioPlayer> monster;
+		Ref<IAudioPlayer> music;
 
 		TextureAtlasEntry forest_tile{ 0 };
 		TextureAtlasEntry grass1{ 0 };
@@ -48,7 +49,9 @@ namespace Ostaga {
 		virtual void OnStart()
 		{
 			atlas = TextureAtlas::Create("res/textures/atlas.png");
-			monster = AudioSource::LoadFromFile("res/sounds/mnstr2.wav");
+			monster = IAudioPlayer::LoadFromFile("res/sounds/mnstr2.wav");
+			music = IAudioPlayer::LoadFromFile("res/music/cyberbyte.wav", { AudioMode::Loop });
+			music->SetGain(0.25f);
 
 			forest_tile =	atlas->AddEntry({ 1, 1, 16, 16 });
 			oaktree =		atlas->AddEntry({ 32, 0, 64, 64 });
@@ -61,6 +64,7 @@ namespace Ostaga {
 			white =			atlas->AddEntry({ atlas->GetWidth() - 1, atlas->GetHeight() - 1, 1, 1 });
 			
 			Renderer::SetTextureAtlas(atlas);
+			music->Play();
 		}
 
 		virtual void OnStop()
@@ -145,24 +149,30 @@ namespace Ostaga {
 
 		virtual void OnEvent(Event &e)
 		{
-			e.Dispatch<KeyUp>([](KeyUp &e) {
-				if (e.keyCode == GLFW_KEY_Q)
+			e.Dispatch<KeyUp>([&](KeyUp &e) {
+				switch (e.keyCode)
 				{
-					static bool start = false;
-					start = !start;
+					case GLFW_KEY_Q:
+					{
+						static bool start = false;
+						start = !start;
 
-					if (start)
-					{
-						PROFILE_SESSION_BEGIN("Ostaga-Runtime");
-						LOG_INFO("Start profiling session: Ostaga-Runtime");
+						if (start)
+						{
+							PROFILE_SESSION_BEGIN("Ostaga-Runtime");
+							LOG_INFO("Start profiling session: Ostaga-Runtime");
+						}
+						else
+						{
+							PROFILE_SESSION_END();
+							LOG_INFO("Ended profiling session: Ostaga-Runtime");
+						}
+
+						return true;
 					}
-					else
-					{
-						PROFILE_SESSION_END();
-						LOG_INFO("Ended profiling session: Ostaga-Runtime");
-					}
-					
-					return true;
+					case GLFW_KEY_P: music->Play(); return true;
+					case GLFW_KEY_O: music->Stop(); return true;
+					case GLFW_KEY_I: music->Pause(); return true;
 				}
 				
 				return false;
@@ -173,8 +183,9 @@ namespace Ostaga {
 				{
 					float x = ((float) e.x / 1280.0f) - 0.5f;
 					float z = ((float) e.y / 720.0f) - 0.5f;
-					monster->SetSourcePosition({ 10.0f * x, 1.0f, 10.0f * z });
-					AudioMaster::Play(monster);
+					monster->SetPosition({ 10.0f * x, 1.0f, 10.0f * z });
+					monster->Play();
+
 					return true;
 				}
 

@@ -33,6 +33,9 @@
 		#define PROFILING 0
 	#endif
 
+	#define AL_CALL(func) \
+		do { func; ALenum error = alGetError(); if (error != AL_NO_ERROR) { LOG_ERROR("OpenAL error {0} @ {1}:{2}", error, __FILE__, __LINE__); } } while(false)
+	
 #else
 	#define OSTAGA_IF_DEBUG(x, ...) __VA_ARGS__
 
@@ -54,6 +57,8 @@
 	#define ASSERT_CRITICAL(x, y, ...)
 
 	#define PROFILING 0
+
+	#define AL_CALL(func) func
 #endif
 
 #ifndef PROFILE_RESULTS_DIR
