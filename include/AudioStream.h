@@ -1,6 +1,7 @@
 #pragma once
 
-#include <IAudioLoader.h>
+#include <IAudioReader.h>
+#include <IAudio.h>
 
 #include <AL/al.h>
 
@@ -8,17 +9,18 @@
 
 namespace Ostaga { namespace Audio {
 
-	struct AudioStream
+	struct AudioStream : public IAudio
 	{
-		AudioStream(size_t bufferCount, size_t bufferSize, Scope<IAudioLoader> loader);
-		~AudioStream();
+		AudioStream(Scope<IAudioReader> reader, size_t bufferCount, size_t bufferSize);
+		virtual ~AudioStream();
 
+		inline virtual AudioBufferType GetBufferType() const override { return AudioBufferType::Stream; };
 		void InitializeStream();
 
 		ALuint *buffers;
 		size_t bufferCount;
 		size_t bufferSize;
 		ALenum format = AL_FORMAT_MONO16;
-		Scope<IAudioLoader> loader;
 	};
+
 } }

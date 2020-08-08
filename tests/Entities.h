@@ -13,38 +13,23 @@ namespace Ostaga {
 	
 	// TODO: Look into using an ECS
 
-	Ref<Graphics::TextureAtlas> atlas;
-	Graphics::TextureAtlasEntry forest_tile;
-	Graphics::TextureAtlasEntry grass1;
-	Graphics::TextureAtlasEntry grass2;
-	Graphics::TextureAtlasEntry grass3;
-	Graphics::TextureAtlasEntry grass4;
-	Graphics::TextureAtlasEntry boulder;
-	Graphics::TextureAtlasEntry oaktree;
-	Graphics::TextureAtlasEntry pinetree;
-	Graphics::TextureAtlasEntry player;
-	Graphics::TextureAtlasEntry white;
+	extern Ref<Audio::IAudio> monster_soundfx;
 
-	void LoadAssets()
-	{
-		Random::SetSeed(1);
-		atlas = Graphics::TextureAtlas::Create("res/textures/atlas.png");
+	extern Ref<Graphics::TextureAtlas> atlas;
+	extern Graphics::TextureAtlasEntry forest_tile;
+	extern Graphics::TextureAtlasEntry grass1;
+	extern Graphics::TextureAtlasEntry grass2;
+	extern Graphics::TextureAtlasEntry grass3;
+	extern Graphics::TextureAtlasEntry grass4;
+	extern Graphics::TextureAtlasEntry boulder;
+	extern Graphics::TextureAtlasEntry oaktree;
+	extern Graphics::TextureAtlasEntry pinetree;
+	extern Graphics::TextureAtlasEntry player;
+	extern Graphics::TextureAtlasEntry white;
 
-		forest_tile = atlas->AddEntry({ 1, 1, 16, 16 });
-		oaktree =	  atlas->AddEntry({ 32, 0, 64, 64 });
-		pinetree =    atlas->AddEntry({ 96, 0, 64, 64 });
-		grass1 =      atlas->AddEntry({ 160, 0, 16, 16 });
-		grass2 =      atlas->AddEntry({ 160, 16, 16, 16 });
-		grass3 =      atlas->AddEntry({ 176, 0, 16, 16 });
-		grass4 =      atlas->AddEntry({ 176, 16, 16, 16 });
-		boulder =     atlas->AddEntry({ 192, 0, 64, 64 });
-		player =      atlas->AddEntry({ 0, 64, 32, 48 });
-		white =       atlas->AddEntry({ atlas->GetWidth() - 1, atlas->GetHeight() - 1, 1, 1 });
+	void LoadAssets();
 
-		Graphics::Renderer::SetTextureAtlas(atlas);
-	}
-
-	const Graphics::TextureAtlasEntry& RandomEntityTexture()
+	inline const Graphics::TextureAtlasEntry& RandomEntityTexture()
 	{
 		float random = Random::Float();
 
@@ -55,7 +40,7 @@ namespace Ostaga {
 		else
 			return boulder;
 	}
-	const Graphics::TextureAtlasEntry &RandomGrassTexture()
+	inline const Graphics::TextureAtlasEntry &RandomGrassTexture()
 	{
 		float random = Random::Float();
 
@@ -71,17 +56,13 @@ namespace Ostaga {
 
 	struct Monster
 	{
-		Ref<Audio::IAudioPlayer> sound;
+		Ref<Audio::IAudioPlayer> soundPlayer;
 		
-		// TODO: Each 'monster' should have a different source sound
-		//		 figure out a way to do this (probably separate audio buffer and audio source)
-		//
-
 		Monster(const glm::vec3 &pos)
-			: sound(Audio::IAudioPlayer::LoadFromFile("res/sounds/mnstr2.wav")) 
+			: soundPlayer(Audio::IAudioPlayer::Create(monster_soundfx))
 		{ 
-			sound->SetPosition(pos);
-			sound->Play(); 
+			soundPlayer->SetPosition(pos);
+			soundPlayer->Play();
 		}
 	};
 

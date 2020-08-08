@@ -1,9 +1,9 @@
 #pragma once
 
-#include <IAudioLoader.h>
+#include <IAudioReader.h>
 #include <IAudioPlayer.h>
-#include <AudioStream.h>
 
+#include <AudioStream.h>
 #include <AL/al.h>
 
 #include <Ref.h>
@@ -14,7 +14,7 @@ namespace Ostaga { namespace Audio {
 	class AudioStreamPlayer : public IAudioPlayer
 	{
 	public:
-		AudioStreamPlayer(const AudioProps& props, Scope<IAudioLoader> loader);
+		AudioStreamPlayer(const Ref<AudioStream> &stream, const AudioProps& props);
 		virtual ~AudioStreamPlayer();
 
 		virtual void Play() override;
@@ -27,7 +27,7 @@ namespace Ostaga { namespace Audio {
 		void ResetStream();
 
 	private:
-		AudioStream m_Stream;
+		Ref<AudioStream> m_Stream;
 		unsigned char *m_StreamCache;
 		std::atomic_bool m_Streaming = false;
 	};

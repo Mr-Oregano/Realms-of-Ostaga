@@ -12,13 +12,12 @@
 
 namespace Ostaga { namespace Audio {
 
-	AudioStreamPlayer::AudioStreamPlayer(const AudioProps &props, Scope<IAudioLoader> loader)
-		: IAudioPlayer(props), 
-		  m_Stream(props.streamBufferCount, props.streamBufferSize, std::forward<Scope<IAudioLoader>>(loader))
+	AudioStreamPlayer::AudioStreamPlayer(const Ref<AudioStream> &stream, const AudioProps &props)
+		: IAudioPlayer(props), m_Stream(stream)
 	{
-		m_StreamCache = new unsigned char[m_Stream.bufferSize];
+		m_StreamCache = new unsigned char[m_Stream->bufferSize];
 		AL_CALL(alGenSources(1, &m_SourceID));
-		AL_CALL(alSourceQueueBuffers(m_SourceID, (ALsizei)m_Stream.bufferCount, m_Stream.buffers));
+		AL_CALL(alSourceQueueBuffers(m_SourceID, (ALsizei)m_Stream->bufferCount, m_Stream->buffers));
 	}
 
 	AudioStreamPlayer::~AudioStreamPlayer()
@@ -29,7 +28,7 @@ namespace Ostaga { namespace Audio {
 
 		ALint buffersProcessed = 0;
 		AL_CALL(alGetSourcei(m_SourceID, AL_BUFFERS_PROCESSED, &buffersProcessed));
-		AL_CALL(alSourceUnqueueBuffers(m_SourceID, (ALsizei)buffersProcessed, m_Stream.buffers));
+		AL_CALL(alSourceUnqueueBuffers(m_SourceID, (ALsizei)buffersProcessed, m_Stream->buffers));
 
 		AL_CALL(alDeleteSources(1, &m_SourceID));
 		delete[] m_StreamCache;
@@ -82,7 +81,7 @@ namespace Ostaga { namespace Audio {
 		if (IsStopped())
 		{
 			// TODO: Sometimes the audio is not restarted, investigate why.
-			AL_CALL(alSourcei(m_SourceID, AL_BYTE_OFFSET, (ALint)m_Stream.bufferSize));
+			AL_CALL(alSourcei(m_SourceID, AL_BYTE_OFFSET, (ALint)m_Stream->bufferSize));
 			AL_CALL(alSourcePlay(m_SourceID));
 		}
 		//
@@ -91,18 +90,18 @@ namespace Ostaga { namespace Audio {
 		AL_CALL(alGetSourcei(m_SourceID, AL_BUFFERS_PROCESSED, &buffersProcessed));
 		for (int i = 0; i < buffersProcessed; ++i)
 		{
-			IAudioLoader &loader = *m_Stream.loader;
-			size_t framesToRead = m_Stream.bufferSize / loader.GetFrameSize();
-			size_t framesRead = loader.ReadFrames(framesToRead, m_StreamCache);
+			IAudioReader &reader = *m_Stream->reader;
+			size_t framesToRead = m_Stream->bufferSize / reader.GetFrameSize();
+			size_t framesRead = reader.ReadFrames(framesToRead, m_StreamCache);
 
 			ALuint buffer = 0;
 			AL_CALL(alSourceUnqueueBuffers(m_SourceID, 1, &buffer));
-			AL_CALL(alBufferData(buffer, m_Stream.format, m_StreamCache, (ALsizei)(framesRead * loader.GetFrameSize()), (ALsizei)loader.GetSampleRate()));
+			AL_CALL(alBufferData(buffer, m_Stream->format, m_StreamCache, (ALsizei)(framesRead * reader.GetFrameSize()), (ALsizei)reader.GetSampleRate()));
 			AL_CALL(alSourceQueueBuffers(m_SourceID, 1, &buffer));
 
 			if (framesRead < framesToRead)
 			{
-				loader.SeekToFrame(0);
+				reader.SeekToFrame(0);
 				if (m_Props.mode == AudioMode::Normal)
 					m_Streaming = false;
 			}
@@ -114,15 +113,15 @@ namespace Ostaga { namespace Audio {
 	//
 	void AudioStreamPlayer::ResetStream()
 	{
-		m_Stream.loader->SeekToFrame(0);
+		m_Stream->reader->SeekToFrame(0);
 
 		ALint buffersProcessed = 0;
 		AL_CALL(alGetSourcei(m_SourceID, AL_BUFFERS_PROCESSED, &buffersProcessed));
-		AL_CALL(alSourceUnqueueBuffers(m_SourceID, (ALsizei)buffersProcessed, m_Stream.buffers));
+		AL_CALL(alSourceUnqueueBuffers(m_SourceID, (ALsizei)buffersProcessed, m_Stream->buffers));
 
-		m_Stream.InitializeStream();
+		m_Stream->InitializeStream();
 
-		AL_CALL(alSourceQueueBuffers(m_SourceID, (ALsizei)m_Stream.bufferCount, m_Stream.buffers));
+		AL_CALL(alSourceQueueBuffers(m_SourceID, (ALsizei)m_Stream->bufferCount, m_Stream->buffers));
 	}
 } }
 

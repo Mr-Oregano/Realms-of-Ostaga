@@ -9,34 +9,11 @@
 
 namespace Ostaga { namespace Audio {
 
-	std::unordered_map<std::string, ALuint> AudioBufferPlayer::s_Buffers;
-
-	AudioBufferPlayer::AudioBufferPlayer(const AudioProps &props, IAudioLoader &loader)
-		: IAudioPlayer(props)
+	AudioBufferPlayer::AudioBufferPlayer(const Ref<AudioBuffer> &buffer, const AudioProps &props)
+		: IAudioPlayer(props), m_Buffer(buffer)
 	{
-		auto it = s_Buffers.find(loader.GetFilePath());
-		if (it == s_Buffers.end())
-		{
-			ALenum format = AL_FORMAT_MONO16;
-			switch (loader.GetChannels())
-			{
-				case 1: format = AL_FORMAT_MONO16; break;
-				case 2: format = AL_FORMAT_STEREO16; break;
-				default: LOG_WARN("Unknown audio format for \"{0}\"", loader.GetFilePath());
-			}
-
-			unsigned char *data = new unsigned char[loader.GetTotalSize()]{ 0 };
-			loader.ReadFrames(loader.GetTotalFrames(), data);
-
-			AL_CALL(alGenBuffers(1, &m_BufferID));
-			AL_CALL(alBufferData(m_BufferID, format, (ALvoid *)data, (ALsizei)loader.GetTotalSize(), loader.GetSampleRate()));
-			s_Buffers.insert({ loader.GetFilePath(), m_BufferID });
-			delete[] data;
-		}
-		else m_BufferID = it->second;
-
 		AL_CALL(alGenSources(1, &m_SourceID));
-		AL_CALL(alSourcei(m_SourceID, AL_BUFFER, m_BufferID));
+		AL_CALL(alSourcei(m_SourceID, AL_BUFFER, m_Buffer->bufferID));
 	}
 
 	AudioBufferPlayer::~AudioBufferPlayer()

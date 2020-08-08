@@ -1,9 +1,12 @@
 #pragma once
 
-#include <IAudioLoader.h>
+#include <IAudioReader.h>
 #include <IAudioPlayer.h>
 
+#include <AudioBuffer.h>
 #include <AL/al.h>
+
+#include <Ref.h>
 
 #include <unordered_map>
 #include <string>
@@ -13,7 +16,7 @@ namespace Ostaga { namespace Audio {
 	class AudioBufferPlayer : public IAudioPlayer
 	{
 	public:
-		AudioBufferPlayer(const AudioProps &props, IAudioLoader &loader);
+		AudioBufferPlayer(const Ref<AudioBuffer> &buffer, const AudioProps &props);
 		virtual ~AudioBufferPlayer();
 
 		virtual void Play() override;
@@ -21,9 +24,6 @@ namespace Ostaga { namespace Audio {
 		virtual void Pause() override;
 
 	private:
-		ALuint m_BufferID;
-
-	private:
-		static std::unordered_map<std::string, ALuint> s_Buffers;
+		Ref<AudioBuffer> m_Buffer;
 	};
 } }

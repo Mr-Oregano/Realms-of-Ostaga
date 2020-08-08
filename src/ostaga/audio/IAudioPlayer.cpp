@@ -5,7 +5,8 @@
 
 #include "IAudioPlayer.h"
 
-#include <IAudioLoader.h>
+#include <IAudio.h>
+#include <IAudioReader.h>
 #include <AudioStreamPlayer.h>
 #include <AudioBufferPlayer.h>
 
@@ -22,30 +23,22 @@ namespace Ostaga { namespace Audio {
         switch (state)
         {
             case AL_PLAYING: return AudioState::Playing;
-            case AL_PAUSED: return AudioState::Paused;
+            case AL_PAUSED:  return AudioState::Paused;
             case AL_STOPPED: return AudioState::Stopped;
         }
 
         return AudioState::Stopped;
     }
 
-    Ref<IAudioPlayer> IAudioPlayer::LoadFromFile(const std::string &path, const AudioProps &props)
+    Ref<IAudioPlayer> IAudioPlayer::Create(const Ref<IAudio> audio, const AudioProps &props)
     {
-        Scope<IAudioLoader> loader(new IAudioLoader(path));
-
-        if (!loader)
+        switch (audio->GetBufferType())
         {
-            LOG_ERROR("Failed to open file: \"{0}\"", path);
-            return nullptr;
-        }
+            case AudioBufferType::Stream:
+                return CreateRef<AudioStreamPlayer>(std::dynamic_pointer_cast<AudioStream>(audio), props);
 
-        size_t threshold = props.streamBufferCount * props.streamBufferSize;
-        if (loader->GetTotalSize() > threshold) // Stream mode will be enabled
-        {
-            LOG_INFO("\"{0}\" will be opened in stream mode", path);
-            return std::make_shared<AudioStreamPlayer>(props, std::move(loader));
+            default: 
+                return CreateRef<AudioBufferPlayer>(std::dynamic_pointer_cast<AudioBuffer>(audio), props);
         }
-
-        return std::make_shared<AudioBufferPlayer>(props, *loader);
     }
 } }

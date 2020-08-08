@@ -10,16 +10,9 @@
 
 namespace Ostaga { namespace Audio {
 
-	AudioStream::AudioStream(size_t bufferCount, size_t bufferSize, Scope<IAudioLoader> loader)
-		: bufferCount(bufferCount), bufferSize(bufferSize), loader(std::move(loader))
+	AudioStream::AudioStream(Scope<IAudioReader> reader, size_t bufferCount, size_t bufferSize)
+		: IAudio(std::move(reader)), bufferCount(bufferCount), bufferSize(bufferSize), format(this->reader->GetFormat())
 	{
-		switch (this->loader->GetChannels())
-		{
-			case 1: format = AL_FORMAT_MONO16; break;
-			case 2: format = AL_FORMAT_STEREO16; break;
-			default: LOG_WARN("Unknown audio format for \"{0}\"", loader->GetFilePath()); break;
-		}
-
 		buffers = new ALuint[bufferCount]{0};
 		AL_CALL(alGenBuffers((ALsizei) bufferCount, buffers));
 
@@ -28,6 +21,7 @@ namespace Ostaga { namespace Audio {
 
 	AudioStream::~AudioStream()
 	{
+		LOG_INFO("Destroying Audiostream for \"{0}\"", reader->GetFilePath());
 		AL_CALL(alDeleteBuffers((ALsizei)bufferCount, buffers));
 		delete[] buffers;
 	}
@@ -37,9 +31,9 @@ namespace Ostaga { namespace Audio {
 		unsigned char *data = new unsigned char[bufferSize]{0};
 		for (int i = 0; i < bufferCount; ++i)
 		{
-			size_t framesToRead = bufferSize / loader->GetFrameSize();
-			size_t framesRead = loader->ReadFrames(framesToRead, data);
-			AL_CALL(alBufferData(buffers[i], format, data, (ALsizei)(framesRead * loader->GetFrameSize()), (ALsizei)loader->GetSampleRate()));
+			size_t framesToRead = bufferSize / reader->GetFrameSize();
+			size_t framesRead = reader->ReadFrames(framesToRead, data);
+			AL_CALL(alBufferData(buffers[i], format, data, (ALsizei)(framesRead * reader->GetFrameSize()), (ALsizei)reader->GetSampleRate()));
 		}
 		delete[] data;
 	}

@@ -15,6 +15,9 @@
 
 namespace Ostaga {
 
+	using namespace Audio;
+	using namespace Graphics;
+
 	Application *Application::s_Current = nullptr;
 
 	Application::Application()

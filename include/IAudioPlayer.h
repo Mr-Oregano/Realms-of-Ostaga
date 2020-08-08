@@ -3,6 +3,8 @@
 #include <AL/al.h>
 #include <string>
 
+#include <IAudio.h>
+
 #include <Ref.h>
 #include <Maths.h>
 
@@ -22,13 +24,6 @@ namespace Ostaga { namespace Audio {
 	struct AudioProps
 	{
 		AudioMode mode;
-
-		// Default sizes for streaming mode
-		// if uncompressed data is larger than the following,
-		// stream mode will be enabled
-		//
-		size_t streamBufferCount = 4;
-		size_t streamBufferSize = 64 * 1024; // 64kb
 	};
 
 	class IAudioPlayer
@@ -55,7 +50,7 @@ namespace Ostaga { namespace Audio {
 		ALuint m_SourceID = 0;
 
 	public:
-		static Ref<IAudioPlayer> LoadFromFile(const std::string& path, const AudioProps& props = { AudioMode::Normal });
+		static Ref<IAudioPlayer> Create(const Ref<IAudio> audio, const AudioProps& props = { AudioMode::Normal });
 
 	};
 } }
