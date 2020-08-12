@@ -58,26 +58,34 @@ namespace Ostaga { namespace Graphics {
 		GLuint &VAO = renderer->VAO;
 		GLuint &VBO = renderer->VBO;
 
-		glGenVertexArrays(1, &VAO);
+		glCreateBuffers(1, &VBO);
+		glNamedBufferStorage(VBO, renderer->vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		glCreateVertexArrays(1, &VAO);
+		glVertexArrayVertexBuffer(VAO, 0, VBO, 0, sizeof(Vertex));
+
+		glVertexArrayAttribFormat(VAO, 0, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, dimensions));
+		glVertexArrayAttribFormat(VAO, 1, 1, GL_FLOAT, GL_FALSE, offsetof(Vertex, rotation));
+		glVertexArrayAttribFormat(VAO, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, tint));
+		glVertexArrayAttribFormat(VAO, 3, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texelSize));
+		glVertexArrayAttribFormat(VAO, 4, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, texCoords));
+
+		glVertexArrayAttribBinding(VAO, 0, 0);
+		glVertexArrayAttribBinding(VAO, 1, 0);
+		glVertexArrayAttribBinding(VAO, 2, 0);
+		glVertexArrayAttribBinding(VAO, 3, 0);
+		glVertexArrayAttribBinding(VAO, 4, 0);
+
+		glEnableVertexArrayAttrib(VAO, 0);
+		glEnableVertexArrayAttrib(VAO, 1);
+		glEnableVertexArrayAttrib(VAO, 2);
+		glEnableVertexArrayAttrib(VAO, 3);
+		glEnableVertexArrayAttrib(VAO, 4);
+
+		// Only need to bind once for now
 		glBindVertexArray(VAO);
-
-		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-		// Buffer Data
-		glBufferData(GL_ARRAY_BUFFER, renderer->vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
 		//
-
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, dimensions));
-		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, rotation));
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, tint));
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texelSize));
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texCoords));
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
-		glEnableVertexAttribArray(4);
 	}
 
 	void Renderer::Init(const RendererProps &props)

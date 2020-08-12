@@ -251,7 +251,7 @@ namespace Ostaga {
 				case GL_DEBUG_SEVERITY_NOTIFICATION:	LOG_TRACE(message); break;
 				case GL_DEBUG_SEVERITY_LOW:				LOG_WARN(message); break;
 				case GL_DEBUG_SEVERITY_MEDIUM:			LOG_WARN(message); break;
-				case GL_DEBUG_SEVERITY_HIGH:			LOG_CRITICAL(message); break;
+				case GL_DEBUG_SEVERITY_HIGH:			LOG_CRITICAL(message); OSTAGA_DEBUG_BREAK(); break;
 				}
 
 			}, nullptr);

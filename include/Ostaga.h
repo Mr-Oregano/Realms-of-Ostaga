@@ -27,6 +27,12 @@
 	#define    ASSERT_ERROR(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->error(y, __VA_ARGS__); }
 	#define ASSERT_CRITICAL(x, y, ...) if (!(x)) { ::Ostaga::Logger::Get()->critical(y, __VA_ARGS__); exit(-1); }
 
+	#ifdef OSTAGA_BUILD_WINDOWS
+		#define OSTAGA_DEBUG_BREAK() __debugbreak()
+	#else
+		#define OSTAGA_DEBUG_BREAK() // TODO: figure out debug break for other platforms
+	#endif
+
 	#ifdef OSTAGA_RELEASE
 		#define PROFILING 1
 	#else
@@ -56,6 +62,7 @@
 	#define    ASSERT_ERROR(x, y, ...)
 	#define ASSERT_CRITICAL(x, y, ...)
 
+	#define OSTAGA_DEBUG_BREAK()
 	#define PROFILING 0
 
 	#define AL_CALL(func) func

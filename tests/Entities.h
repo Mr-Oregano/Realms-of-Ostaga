@@ -88,40 +88,6 @@ namespace Ostaga {
 		Tile(const Graphics::TextureAtlasEntry &texture, const glm::vec2 &pos, const glm::vec2 &size)
 			: texture(texture), pos(pos), size(size)
 		{
-			GenerateEntities();
 		}
-
-		void OnRender()
-		{
-			glm::vec3 pos = glm::vec3(this->pos, 1.0f);
-			
-			Graphics::Renderer::Draw(pos, size, texture);
-
-			for (Entity &entity : entities)
-			{
-				pos = glm::vec3(entity.pos, 720.0f);
-				Graphics::Renderer::Draw(pos, entity.size, entity.texture);
-			}
-		}
-
-	private:
-		std::vector<Entity> entities;
-
-	private:
-		void GenerateEntities()
-		{
-			entities.reserve(Random::Integer() % 2);
-
-			for (int i = 0; i < entities.capacity(); ++i)
-			{
-				const Graphics::TextureAtlasEntry &texture = RandomEntityTexture();
-
-				glm::vec2 size = glm::vec2{ texture.width * atlas->GetWidth(), texture.height * atlas->GetHeight() } * 1.5f;
-				glm::vec2 pos{ this->pos.x, this->pos.y - size.y / 2 };
-
-				entities.emplace_back(texture, pos, size);
-			}
-		}
-
 	};
 }

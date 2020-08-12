@@ -28,7 +28,7 @@ namespace Ostaga {
 		Random::SetSeed(1);
 		atlas = Graphics::TextureAtlas::Create("res/textures/atlas.png");
 
-		forest_tile = atlas->AddEntry({ 1, 1, 16, 16 });
+		forest_tile = atlas->AddEntry({ 2, 66, 32, 32 });
 		oaktree = atlas->AddEntry({ 32, 0, 64, 64 });
 		pinetree = atlas->AddEntry({ 96, 0, 64, 64 });
 		grass1 = atlas->AddEntry({ 160, 0, 16, 16 });

@@ -20,18 +20,31 @@ namespace Ostaga {
 	using namespace Graphics;
 	using namespace Audio;
 
-	 void TestingLayer::OnStart()
+	void TestingLayer::OnStart()
 	{
 		LoadAssets();
 
+		glm::vec2 scale = glm::vec2{ TILE_SIZE } / glm::vec2{ forest_tile.width * atlas->GetWidth(), forest_tile.height * atlas->GetHeight() };
+
 		tiles.reserve(WORLD_WIDTH * WORLD_HEIGHT);
 		for (int y = 0; y < WORLD_HEIGHT; ++y)
-		{
 			for (int x = 0; x < WORLD_WIDTH; ++x)
-			{
 				tiles.emplace_back(forest_tile, glm::vec2{ TILE_SIZE * x, TILE_SIZE * y }, glm::vec2{ TILE_SIZE });
-			}
+
+		entities.reserve(Random::Integer() % 500);
+		for (int i = 0; i < entities.capacity(); ++i)
+		{
+			const Graphics::TextureAtlasEntry &texture = RandomEntityTexture();
+
+			glm::vec2 size = glm::vec2{ texture.width * atlas->GetWidth(), texture.height * atlas->GetHeight() } * scale;
+			glm::vec2 pos{ Random::Float() * WORLD_WIDTH * TILE_SIZE, Random::Float() * WORLD_HEIGHT * TILE_SIZE - size.y / 2 };
+
+			entities.emplace_back(texture, pos, size);
 		}
+		
+		std::sort(entities.begin(), entities.end(), [](Entity &e1, Entity &e2) -> bool {
+			return e1.pos.y	< e2.pos.y;
+		});
 
 		temptation_trk = IAudio::LoadFromFile("res/music/temptation.wav");
 		musicPlayer = IAudioPlayer::Create(temptation_trk, { AudioMode::Loop });
@@ -60,15 +73,14 @@ namespace Ostaga {
 		Renderer::BeginScene(glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f));
 
 		for (Tile &tile : tiles)
-			tile.OnRender();
+			Renderer::Draw(tile.pos, tile.size, tile.texture);
 
-		// Night time
-		Renderer::Draw({ 1280.0f / 2, 720.0f / 2 }, { 1280, 720 }, white, { 0.05f, 0.0f, 0.15f, 0.7f });
-		//
+		for (Entity &entity : entities)
+			Renderer::Draw(entity.pos, entity.size, entity.texture);
 
-		Renderer::Draw({ 210, 25 }, { 400, 30 }, white, { 1, 0, 0, 1 });
-		Renderer::Draw({ 210, 65 }, { 400, 30 }, white, { 0, 1, 0, 1 });
-		Renderer::Draw({ 210, 105 }, { 400, 30 }, white, { 0, 0, 1, 1 });
+		Renderer::Draw({ 210, 15 }, { 400, 15 }, white, { 1, 0, 0, 1 });
+		Renderer::Draw({ 210, 30 }, { 400, 15 }, white, { 0, 1, 0, 1 });
+		Renderer::Draw({ 210, 45 }, { 400, 15 }, white, { 0, 0, 1, 1 });
 
 		Renderer::EndScene();
 	}
