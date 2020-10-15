@@ -63,7 +63,9 @@ project "Realms of Ostaga"
 		"src/**.cpp",
 
 		"tests/**.h",
-		"tests/**.cpp"
+		"tests/**.cpp",
+
+		"res/**.*"
 	}
 
 	includedirs {
