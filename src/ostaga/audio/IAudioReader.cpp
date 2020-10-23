@@ -25,18 +25,16 @@ namespace Ostaga { namespace Audio {
             case 1: m_Format = AL_FORMAT_MONO16; break;
             case 2: m_Format = AL_FORMAT_STEREO16; break;
             default: 
-                LOG_WARN("Unknown audio format for \"{0}\"", path); 
-                m_Format = AL_FORMAT_MONO16; // Assuming mono
+                LOG_WARN("Unknown audio format for \"{0}\"\nAssuming AL_FORMAT_MONO16", path); 
                 break;
         }
-
     }
 
     IAudioReader::~IAudioReader()
     {
         LOG_INFO("Closing file handle for \"{0}\"", m_FilePath);
         m_Loaded = false;
-        drwav_uninit(&m_FileHandle); // Close file handle
+        drwav_uninit(&m_FileHandle); // Closes file handle
     }
 
     size_t IAudioReader::ReadFrames(size_t framesToRead, unsigned char *data)

@@ -6,6 +6,7 @@
 #include <AL/al.h>
 
 #include <Ref.h>
+#include <Ostaga.h>
 
 namespace Ostaga { namespace Audio {
 
@@ -17,5 +18,6 @@ namespace Ostaga { namespace Audio {
 		inline virtual AudioBufferType GetBufferType() const override { return AudioBufferType::Buffer; };
 
 		ALuint bufferID;
+		OSTAGA_IF_DEBUG(std::string name;) // Debug only
 	};
 } }

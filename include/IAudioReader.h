@@ -41,7 +41,7 @@ namespace Ostaga { namespace Audio {
 		int m_Channels = 0;
 		int m_SampleRate = 0;
 		size_t m_TotalFrames = 0;
-		ALenum m_Format;
+		ALenum m_Format = AL_FORMAT_MONO16;
 
 		bool m_Loaded = false;
 	};

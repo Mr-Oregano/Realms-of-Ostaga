@@ -10,20 +10,24 @@
 
 namespace Ostaga { namespace Audio {
 
+	// The AudioBuffer should not need to store/maintain a file handle
+	// to the audio file. Once the data buffer has been read, the file
+	// handle can be released.
+	//
 	AudioBuffer::AudioBuffer(Scope<IAudioReader> reader)
-		: IAudio(std::move(reader))
 	{
-		unsigned char *data = new unsigned char[this->reader->GetTotalSize()]{ 0 };
-		this->reader->ReadFrames(this->reader->GetTotalFrames(), data);
+		unsigned char *data = new unsigned char[reader->GetTotalSize()]{ 0 };
+		reader->ReadFrames(reader->GetTotalFrames(), data);
+		OSTAGA_IF_DEBUG(name = reader->GetFilePath();) // Debug only
 
 		AL_CALL(alGenBuffers(1, &bufferID));
-		AL_CALL(alBufferData(bufferID, this->reader->GetFormat(), (ALvoid *)data, (ALsizei) this->reader->GetTotalSize(), this->reader->GetSampleRate()));
+		AL_CALL(alBufferData(bufferID, reader->GetFormat(), (ALvoid *)data, (ALsizei) reader->GetTotalSize(), reader->GetSampleRate()));
 		delete[] data;
 	}
 
 	AudioBuffer::~AudioBuffer()
 	{
-		LOG_INFO("Destroying AudioBuffer for \"{0}\"", reader->GetFilePath());
+		LOG_INFO("Destroying AudioBuffer for \"{0}\"", name);
 		AL_CALL(alDeleteBuffers(1, &bufferID));
 	}
 } }

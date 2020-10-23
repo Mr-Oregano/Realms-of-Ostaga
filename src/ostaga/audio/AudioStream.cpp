@@ -11,7 +11,7 @@
 namespace Ostaga { namespace Audio {
 
 	AudioStream::AudioStream(Scope<IAudioReader> reader, size_t bufferCount, size_t bufferSize)
-		: IAudio(std::move(reader)), bufferCount(bufferCount), bufferSize(bufferSize), format(this->reader->GetFormat())
+		: reader(std::move(reader)), bufferCount(bufferCount), bufferSize(bufferSize), format(this->reader->GetFormat())
 	{
 		buffers = new ALuint[bufferCount]{0};
 		AL_CALL(alGenBuffers((ALsizei) bufferCount, buffers));

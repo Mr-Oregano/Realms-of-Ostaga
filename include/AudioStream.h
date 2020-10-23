@@ -17,6 +17,7 @@ namespace Ostaga { namespace Audio {
 		inline virtual AudioBufferType GetBufferType() const override { return AudioBufferType::Stream; };
 		void InitializeStream();
 
+		Scope<IAudioReader> reader;
 		ALuint *buffers;
 		size_t bufferCount;
 		size_t bufferSize;

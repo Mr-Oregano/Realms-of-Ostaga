@@ -40,6 +40,7 @@ namespace Ostaga { namespace Audio {
 		{
 		case AudioState::Stopped:
 			AudioDevice::RegisterStream(this); // Will wait until the stream can be registered
+			[[fallthrough]]; // Yes, msvc, I want this to fall through
 		case AudioState::Paused:
 			m_Streaming = true;
 			AL_CALL(alSourcei(m_SourceID, AL_LOOPING, AL_FALSE)); // Looping is handled by the stream

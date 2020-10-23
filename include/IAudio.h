@@ -19,12 +19,9 @@ namespace Ostaga { namespace Audio {
 	struct IAudio
 	{
 	public:
-		IAudio(Scope<IAudioReader> reader) : reader(std::move(reader)) {}
+		IAudio() = default;
 		virtual ~IAudio() = default;
-
 		virtual AudioBufferType GetBufferType() const = 0;
-
-		Scope<IAudioReader> reader;
 
 	public:
 		static Ref<IAudio> LoadFromFile(const std::string &path);
