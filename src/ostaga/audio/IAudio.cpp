@@ -40,9 +40,9 @@ namespace Ostaga { namespace Audio {
         if (reader->GetTotalSize() > threshold) // Stream mode will be enabled
         {
             LOG_INFO("\"{0}\" will be opened in stream mode", path);
-            return std::make_shared<AudioStream>(std::move(reader), STREAM_BUFFER_COUNT, STREAM_BUFFER_SIZE);
+            return CreateRef<AudioStream>(std::move(reader), STREAM_BUFFER_COUNT, STREAM_BUFFER_SIZE);
         }
 
-        return std::make_shared<AudioBuffer>(std::move(reader));
+        return CreateRef<AudioBuffer>(std::move(reader));
     }
 } }

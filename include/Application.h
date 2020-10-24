@@ -3,7 +3,7 @@
 #include <Window.h>
 #include <Layer.h>
 
-#include <memory>
+#include <Ref.h>
 
 namespace Ostaga
 {
@@ -31,7 +31,7 @@ namespace Ostaga
 		inline static Application& Get() { return *s_Current; }
 
 	private:
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		bool m_Running = false;
 		bool m_Iconified = false;
 

@@ -35,7 +35,7 @@ namespace Ostaga {
 			true 
 		};
 
-		m_Window = std::make_unique<Window>(props);
+		m_Window = CreateScope<Window>(props);
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
 
 		AudioDevice::Init();
