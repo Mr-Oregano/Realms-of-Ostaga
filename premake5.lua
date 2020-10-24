@@ -5,6 +5,8 @@ workspace "Realms of Ostaga"
 
 	staticruntime "On"
 
+	flags "MultiProcessorCompile"
+
 	configurations {
 		"Debug",
 		"Release",
