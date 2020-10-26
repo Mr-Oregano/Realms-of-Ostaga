@@ -21,6 +21,7 @@ namespace Ostaga {
 		m_Layers.push_back(layer);
 		layer->OnStart();
 	}
+
 	void LayerStack::PushOverlay(Layer *overlay)
 	{
 		m_Overlays.push_back(overlay);
@@ -34,6 +35,7 @@ namespace Ostaga {
 		m_Layers.erase(m_Layers.end());
 		return last;
 	}
+
 	Layer *LayerStack::PopOverlay()
 	{
 		Layer *last = *m_Overlays.end();
@@ -52,6 +54,7 @@ namespace Ostaga {
 		for (; it != m_Layers.rend(); ++it)
 			(*it)->OnUpdate(ts);
 	}
+
 	void LayerStack::OnRender()
 	{
 		for (Layer *layer : m_Layers)
@@ -84,5 +87,16 @@ namespace Ostaga {
 			if (e.Handled)
 				return;
 		}
+	}
+
+	void LayerStack::OnGui()
+	{
+		auto it = m_Overlays.rbegin();
+		for (; it != m_Overlays.rend(); ++it)
+			(*it)->OnGui();
+
+		it = m_Layers.rbegin();
+		for (; it != m_Layers.rend(); ++it)
+			(*it)->OnGui();
 	}
 }

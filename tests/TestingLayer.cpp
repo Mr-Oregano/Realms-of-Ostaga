@@ -4,6 +4,7 @@
 //
 
 #include "TestingLayer.h"
+#include "imgui.h"
 
 #include <Input.h>
 #include <KeyEvent.h>
@@ -46,7 +47,7 @@ namespace Ostaga {
 			return e1.pos.y	< e2.pos.y;
 		});
 
-		temptation_trk = IAudio::LoadFromFile("res/music/temptation.wav");
+		temptation_trk = IAudio::LoadFromFile("res/music/cyberbyte.wav");
 		musicPlayer = IAudioPlayer::Create(temptation_trk, { AudioMode::Loop });
 		musicPlayer->SetGain(0.25f);
 		musicPlayer->Play();
@@ -83,6 +84,11 @@ namespace Ostaga {
 		Renderer::Draw({ 210, 45 }, { 400, 15 }, white, { 0, 0, 1, 1 });
 
 		Renderer::EndScene();
+	}
+
+	void TestingLayer::OnGui()
+	{
+		ImGui::ShowDemoWindow();
 	}
 
 	void TestingLayer::OnEvent(Event &e)

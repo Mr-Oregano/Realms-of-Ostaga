@@ -29,6 +29,8 @@ namespace Ostaga {
 		virtual void OnRender() = 0;
 		virtual void OnEvent(Event &e) = 0;
 
+		virtual void OnGui() {}
+
 	public:
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
@@ -51,6 +53,7 @@ namespace Ostaga {
 		void OnUpdate(TimeStep ts);
 		void OnRender();
 		void OnEvent(Event &e);
+		void OnGui();
 
 	private:
 		std::vector<Layer*> m_Layers;

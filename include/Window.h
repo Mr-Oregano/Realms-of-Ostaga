@@ -18,13 +18,12 @@ namespace Ostaga {
 		WindowedFullscreen,
 		Fullscreen
 	};
+
 	struct WindowProps
 	{
 		int width;
 		int height;
-
 		const char *title;
-
 		WindowMode mode;
 		bool vysnc;
 	};
@@ -40,30 +39,22 @@ namespace Ostaga {
 		inline int GetWidth() const { return m_Data.props.width; }
 		inline int GetHeight() const { return m_Data.props.height; }
 
-		inline void SetEventCallback(std::function<void(Event&)> EventCallback) { m_Data.EventCallback = EventCallback; } 
+		inline void SetEventCallback(std::function<void(Event&)> EventCallback) { m_Data.EventCallback = EventCallback; }
+		inline GLFWwindow* NativeWindowHandle() const { return m_WindowPtr; }
 
 		inline bool IsVysncEnabled() const { return m_Data.props.vysnc; }
 		inline void SetVsync(bool vsync) { m_Data.props.vysnc = vsync; glfwSwapInterval(vsync ? 1 : 0); }
 
 		void SetWindowMode(WindowMode mode);
-		OSTAGA_IF_DEBUG(inline void SetClearColor(const glm::vec4 &color) { glClearColor(color.r, color.g, color.b, color.a); })
+		// TODO: Issue with macro expansion.
+		// OSTAGA_IF_DEBUG(inline void SetClearColor(const glm::vec4 &color) { glClearColor(color.r, color.g, color.b, color.a); });
 
 		inline bool IsVisible() const { return m_Visible; }
-		inline void SetVisible(bool visible) {
-			m_Visible = visible;
-
-			if (m_Visible)
-			{
-				glfwShowWindow(m_WindowPtr);
-				return;
-			}
-
-			glfwHideWindow(m_WindowPtr);
-		}
+		void SetVisible(bool visible);
 
 	private:
 		void InitWindow();
-		GLFWwindow *CreateWindowHandle();
+		void CreateWindowHandle();
 		void SetupEventCallback();
 		void DestroyWindow();
 
@@ -74,7 +65,6 @@ namespace Ostaga {
 		{
 			WindowProps props;
 			std::function<void(Event &)> EventCallback;
-
 		} m_Data;
 
 		bool m_Visible = false;

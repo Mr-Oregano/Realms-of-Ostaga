@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Window.h>
+#include <ImGuiSurface.h>
 #include <Layer.h>
 
 #include <Ref.h>
@@ -32,6 +33,8 @@ namespace Ostaga
 
 	private:
 		Scope<Window> m_Window;
+		OSTAGA_IF_DEBUG(Scope<ImGuiSurface> m_ImGui;)
+
 		bool m_Running = false;
 		bool m_Iconified = false;
 

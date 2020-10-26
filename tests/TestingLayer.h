@@ -34,7 +34,8 @@ namespace Ostaga {
 
 		virtual void OnUpdate(TimeStep ts) override;
 		virtual void OnRender() override;
-
 		virtual void OnEvent(Event &e) override;
+
+		virtual void OnGui() override;
 	};
 }

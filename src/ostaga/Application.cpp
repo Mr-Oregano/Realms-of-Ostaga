@@ -38,11 +38,14 @@ namespace Ostaga {
 		m_Window = CreateScope<Window>(props);
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
 
+		OSTAGA_IF_DEBUG(m_ImGui = CreateScope<ImGuiSurface>(*m_Window);)
+
 		AudioDevice::Init();
 		Renderer::Init({ 10000 });
 		PROFILE_SESSION_END();
 
 	}
+
 	Application::~Application()
 	{
 		Renderer::Shutdown();
@@ -56,7 +59,14 @@ namespace Ostaga {
 		// No need to be renderering if the window is
 		// minimized.
 		if (!m_Iconified)
+		{
 			m_Layers.OnRender();
+
+			OSTAGA_IF_DEBUG(
+				m_ImGui->Begin();
+				m_Layers.OnGui();
+				m_ImGui->End();)
+		}
 	}
 
 	void Application::OnEvent(Event &e)

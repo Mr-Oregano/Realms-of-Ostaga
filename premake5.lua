@@ -43,6 +43,7 @@ workspace "Realms of Ostaga"
 		include "vendor/stb_image"
 		include "vendor/openal-soft"
 		include "vendor/dr_wav"
+		include "vendor/imgui"
 	group ""
 
 project "Realms of Ostaga"
@@ -90,7 +91,8 @@ project "Realms of Ostaga"
 		"stb_image",
 		"opengl32.lib",
 		"openal-soft",
-		"dr_wav"
+		"dr_wav",
+		"ImGui"
 	}
 
 	pchheader "ospch.h"

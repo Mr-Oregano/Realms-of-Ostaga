@@ -4,13 +4,12 @@
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://gitlab.com/Sympleque/imgui.git
-	branch = docking
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "vendor/openal-soft"]
 	path = vendor/openal-soft
 	url = https://gitlab.com/Sympleque/openal-soft.git
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://gitlab.com/Sympleque/imgui.git
