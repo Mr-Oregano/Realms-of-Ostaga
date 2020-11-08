@@ -24,10 +24,8 @@ namespace Ostaga { namespace Audio {
         {
             case AL_PLAYING: return AudioState::Playing;
             case AL_PAUSED:  return AudioState::Paused;
-            case AL_STOPPED: return AudioState::Stopped;
+            default:         return AudioState::Stopped;
         }
-
-        return AudioState::Stopped;
     }
 
     Ref<IAudioPlayer> IAudioPlayer::Create(const Ref<IAudio> audio, const AudioProps &props)

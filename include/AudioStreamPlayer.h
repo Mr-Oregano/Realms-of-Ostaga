@@ -25,10 +25,14 @@ namespace Ostaga { namespace Audio {
 		//
 		void UpdateStream();
 		void ResetStream();
+		void InitializeStream();
 
 	private:
 		Ref<AudioStream> m_Stream;
+		ALuint *buffers;
+		size_t m_CurrentFrame = 0;
 		unsigned char *m_StreamCache;
+
 		std::atomic_bool m_Streaming = false;
 	};
 } }

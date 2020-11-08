@@ -17,7 +17,7 @@ namespace Ostaga { namespace Audio {
 	AudioBuffer::AudioBuffer(Scope<IAudioReader> reader)
 	{
 		unsigned char *data = new unsigned char[reader->GetTotalSize()]{ 0 };
-		reader->ReadFrames(reader->GetTotalFrames(), data);
+		reader->ReadFrames(0, reader->GetTotalFrames(), data);
 		OSTAGA_IF_DEBUG(name = reader->GetFilePath();) // Debug only
 
 		AL_CALL(alGenBuffers(1, &bufferID));

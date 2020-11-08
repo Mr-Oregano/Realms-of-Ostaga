@@ -37,8 +37,9 @@ namespace Ostaga { namespace Audio {
         drwav_uninit(&m_FileHandle); // Closes file handle
     }
 
-    size_t IAudioReader::ReadFrames(size_t framesToRead, unsigned char *data)
+    size_t IAudioReader::ReadFrames(size_t start, size_t framesToRead, unsigned char *data)
     {
+        drwav_seek_to_pcm_frame(&m_FileHandle, start);
         return drwav_read_pcm_frames_s16(&m_FileHandle, framesToRead, (drwav_int16 *)data);
     }
 

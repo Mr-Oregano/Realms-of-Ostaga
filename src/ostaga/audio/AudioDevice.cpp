@@ -94,7 +94,7 @@ namespace Ostaga { namespace Audio {
 	// TODO: Not really the best to stall the main thread when unregistering/registering streams
 	//		 will need to figure out how to deal with resource deallocation
 	//
-	// When called, method will lock until the stream can be removed
+	//		When called, method will lock until the stream can be removed
 	//      the stream should not be removed until it is certain that
 	//      that it has finished its last update.
 	//

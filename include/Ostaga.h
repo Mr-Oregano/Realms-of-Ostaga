@@ -40,7 +40,11 @@
 	#endif
 
 	#define AL_CALL(func) \
-		do { func; ALenum error = alGetError(); if (error != AL_NO_ERROR) { LOG_ERROR("OpenAL error {0} @ {1}:{2}", error, __FILE__, __LINE__); } } while(false)
+		do { \
+			func; \
+			ALenum error = alGetError(); \
+			if (error != AL_NO_ERROR) { LOG_ERROR("OpenAL error {0} @ {1}:{2}", error, __FILE__, __LINE__); OSTAGA_DEBUG_BREAK(); } \
+		} while(false)
 	
 #else
 	#define OSTAGA_IF_DEBUG(x, ...) __VA_ARGS__

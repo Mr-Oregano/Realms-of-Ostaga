@@ -31,7 +31,7 @@ namespace Ostaga { namespace Audio {
 
 		// Returns the total frames read
 		//
-		size_t ReadFrames(size_t framesToRead, unsigned char *data);
+		size_t ReadFrames(size_t start, size_t framesToRead, unsigned char *data);
 		void SeekToFrame(size_t frame);
 
 	private:
