@@ -73,8 +73,9 @@ namespace Ostaga {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, m_Data.props.resizable);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_MAXIMIZED, m_Data.props.mode == WindowMode::Maximized);
 
 		switch (m_Data.props.mode)
 		{

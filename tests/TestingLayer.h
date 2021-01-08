@@ -22,15 +22,15 @@ namespace Ostaga {
 		std::vector<Tile> tiles;
 		std::vector<Entity> entities;
 
-		Ref<Audio::IAudio> temptation_trk;
+		Ref<Audio::IAudio> temptation_track;
 		Ref<Audio::IAudioPlayer> musicPlayer;
 
 		// Debugging functionality - 
 		//	This will be stripped in non-debug builds
 		OSTAGA_IF_DEBUG(TestingLayer() : Layer("TestingLayer") {})
 
-		virtual void OnStart() override;
-		virtual void OnStop() override;
+		virtual void OnStartup() override;
+		virtual void OnShutdown() override;
 
 		virtual void OnUpdate(TimeStep ts) override;
 		virtual void OnRender() override;

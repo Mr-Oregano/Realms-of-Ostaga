@@ -2,8 +2,9 @@
 
 #include <Window.h>
 #include <ImGuiSurface.h>
-#include <Layer.h>
+#include <ViewportDockspace.h>
 
+#include <Layer.h>
 #include <Ref.h>
 
 namespace Ostaga
@@ -18,11 +19,11 @@ namespace Ostaga
 		void OnEvent(Event &e);
 
 		// TODO: consider implementing a State system
-		inline void PushLayer(Layer *layer) { m_Layers.PushLayer(layer); }
-		inline void PushOverlay(Layer *overlay) { m_Layers.PushOverlay(overlay); }
+		inline void PushLayer(Ref<Layer> layer) { m_Layers.PushLayer(layer); }
+		inline void PushOverlay(Ref<Layer> overlay) { m_Layers.PushOverlay(overlay); }
 
-		inline Layer *PopLayer() { return m_Layers.PopLayer(); }
-		inline Layer *PopOverlay() { return m_Layers.PopOverlay(); }
+		inline Ref<Layer> PopLayer() { return m_Layers.PopLayer(); }
+		inline Ref<Layer> PopOverlay() { return m_Layers.PopOverlay(); }
 		//
 
 		void Run();
@@ -34,6 +35,7 @@ namespace Ostaga
 	private:
 		Scope<Window> m_Window;
 		OSTAGA_IF_DEBUG(Scope<ImGuiSurface> m_ImGui;)
+		OSTAGA_IF_DEBUG(Ref<ViewportDockspace> dockspace;)
 
 		bool m_Running = false;
 		bool m_Iconified = false;

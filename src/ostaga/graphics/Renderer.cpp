@@ -97,9 +97,6 @@ namespace Ostaga { namespace Graphics {
 		SetPipelineState();
 		CreateBufferStore();
 		LoadAssets();
-		
-		// Bindings currently remain constant throughout the application
-		// no need to rebind for now.
 	}
 
 	void Renderer::Shutdown()
@@ -122,9 +119,7 @@ namespace Ostaga { namespace Graphics {
 	{
 		if (renderer->vertexCount > 0)
 			Flush();
-
 		renderer->atlas = atlas;
-		atlas->Bind();
 	}
 
 	void Renderer::Draw(const glm::vec2 &pos, const glm::vec2 &size, const TextureAtlasEntry &tex, const glm::vec4 &tint, float rotation)
@@ -158,6 +153,7 @@ namespace Ostaga { namespace Graphics {
 
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
+		renderer->atlas->Bind();
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
 		glDrawArrays(GL_POINTS, 0, (GLsizei) vertexCount);

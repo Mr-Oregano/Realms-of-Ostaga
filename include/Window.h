@@ -16,7 +16,8 @@ namespace Ostaga {
 	{
 		Windowed,
 		WindowedFullscreen,
-		Fullscreen
+		Fullscreen,
+		Maximized,
 	};
 
 	struct WindowProps
@@ -26,6 +27,7 @@ namespace Ostaga {
 		const char *title;
 		WindowMode mode;
 		bool vysnc;
+		bool resizable;
 	};
 
 	class Window

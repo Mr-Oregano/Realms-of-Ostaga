@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Ostaga.h>
+#include <Ref.h>
 
 #include <Event.h>
 #include <KeyEvent.h>
@@ -17,17 +18,21 @@ namespace Ostaga {
 		// Debugging functionality
 		OSTAGA_IF_DEBUG(
 			Layer(const std::string &name = "Unnamed-Layer") : m_Name(name) {},
-			Layer() = default;)
+			Layer() = default;
+		)
 		//
 
 		virtual ~Layer() = default;
 
-		virtual void OnStart() = 0;
-		virtual void OnStop() = 0;
+		virtual void OnBegin() {}
+		virtual void OnEnd() {}
 
-		virtual void OnUpdate(TimeStep ts) = 0;
-		virtual void OnRender() = 0;
-		virtual void OnEvent(Event &e) = 0;
+		virtual void OnStartup() {}
+		virtual void OnShutdown() {}
+
+		virtual void OnUpdate(TimeStep ts) {}
+		virtual void OnRender() {}
+		virtual void OnEvent(Event &e) {}
 
 		virtual void OnGui() {}
 
@@ -44,19 +49,22 @@ namespace Ostaga {
 		LayerStack() = default;
 		~LayerStack();
 
-		void PushLayer(Layer *layer);
-		void PushOverlay(Layer *overlay);
+		void PushLayer(Ref<Layer> layer);
+		void PushOverlay(Ref<Layer> overlay);
 
-		Layer* PopLayer();
-		Layer* PopOverlay();
+		Ref<Layer> PopLayer();
+		Ref<Layer> PopOverlay();
 
-		void OnUpdate(TimeStep ts);
-		void OnRender();
+		void BeginAll();
+		void EndAll();
+		void UpdateAll(TimeStep ts);
+		void RenderAll();
+
 		void OnEvent(Event &e);
 		void OnGui();
 
 	private:
-		std::vector<Layer*> m_Layers;
-		std::vector<Layer*> m_Overlays;
+		std::vector<Ref<Layer>> m_Layers;
+		std::vector<Ref<Layer>> m_Overlays;
 	};
 }

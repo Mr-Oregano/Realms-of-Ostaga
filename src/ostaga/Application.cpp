@@ -31,8 +31,9 @@ namespace Ostaga {
 			1280,
 			720,
 			"Realms of Ostaga",
-			OSTAGA_IF_DEBUG(WindowMode::Windowed, WindowMode::WindowedFullscreen),
-			true 
+			OSTAGA_IF_DEBUG(WindowMode::Maximized, WindowMode::WindowedFullscreen),
+			true,
+			OSTAGA_IF_DEBUG(true, false)
 		};
 
 		m_Window = CreateScope<Window>(props);
@@ -54,29 +55,53 @@ namespace Ostaga {
 
 	void Application::Update(TimeStep ts)
 	{
-		m_Layers.OnUpdate(ts);
+		OSTAGA_IF_DEBUG(m_ImGui->Begin();)
+		m_Layers.BeginAll();
+		m_Layers.UpdateAll(ts);
 
 		// No need to be renderering if the window is
 		// minimized.
 		if (!m_Iconified)
 		{
-			m_Layers.OnRender();
+			OSTAGA_IF_DEBUG(dockspace->BeginCapture();)
+			m_Layers.RenderAll();
+			OSTAGA_IF_DEBUG(dockspace->EndCapture();)
 
 			OSTAGA_IF_DEBUG(
-				m_ImGui->Begin();
+				dockspace->ShowViewportWindow();
 				m_Layers.OnGui();
-				m_ImGui->End();)
+			)
 		}
+
+		m_Layers.EndAll();
+		OSTAGA_IF_DEBUG(m_ImGui->End();)
 	}
+
 
 	void Application::OnEvent(Event &e)
 	{
 		if (e.GetType() == EventType::WindowClose)
 			m_Running = false;
 
-		e.Dispatch<WindowIconified>([&](WindowIconified& e){
+		e.Dispatch<WindowIconified>([&](WindowIconified& e)
+		{
 			m_Iconified = e.iconified;
 			return true;
+		});
+
+		e.Dispatch<MouseDown>([&](MouseDown &e) 
+		{
+			OSTAGA_IF_DEBUG(
+				ViewportContentProps content = dockspace->GetViewportContentProps();
+				e.x = (e.x - content.x) / content.width;
+				e.y = (e.y - content.y) / content.height;
+				,
+				e.x /= m_Window->GetWidth();
+				e.y /= m_Window->GetHeight();
+			)
+
+			LOG_INFO(e);
+			return false;
 		});
 
 		m_Layers.OnEvent(e);
@@ -84,7 +109,9 @@ namespace Ostaga {
 
 	void Application::Run()
 	{
-		PushLayer(new TestingLayer);
+		OSTAGA_IF_DEBUG(dockspace = CreateRef<ViewportDockspace>(m_Window->GetWidth(), m_Window->GetHeight());)
+		OSTAGA_IF_DEBUG(PushOverlay(dockspace);)
+		PushLayer(CreateRef<TestingLayer>());
 
 		float lastTime = (float) glfwGetTime();
 

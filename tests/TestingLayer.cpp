@@ -10,6 +10,7 @@
 #include <KeyEvent.h>
 
 #include <Renderer.h>
+#include <Application.h>
 
 static const int TILE_SIZE = 64;
 
@@ -21,7 +22,7 @@ namespace Ostaga {
 	using namespace Graphics;
 	using namespace Audio;
 
-	void TestingLayer::OnStart()
+	void TestingLayer::OnStartup()
 	{
 		LoadAssets();
 
@@ -47,13 +48,15 @@ namespace Ostaga {
 			return e1.pos.y	< e2.pos.y;
 		});
 
-		temptation_trk = IAudio::LoadFromFile("res/music/cyberbyte.wav");
-		musicPlayer = IAudioPlayer::Create(temptation_trk, { AudioMode::Loop });
+		temptation_track = IAudio::LoadFromFile("res/music/temptation.wav");
+		musicPlayer = IAudioPlayer::Create(temptation_track, { AudioMode::Loop });
 		musicPlayer->SetGain(0.25f);
 		musicPlayer->Play();
+
+		
 	}
 
-	void TestingLayer::OnStop()
+	void TestingLayer::OnShutdown()
 	{
 	}
 
@@ -89,6 +92,12 @@ namespace Ostaga {
 	void TestingLayer::OnGui()
 	{
 		ImGui::ShowDemoWindow();
+
+		ImGui::Begin("Some Side Panel");
+		ImGui::End();
+
+		ImGui::Begin("Another Side Panel");
+		ImGui::End();
 	}
 
 	void TestingLayer::OnEvent(Event &e)
@@ -125,10 +134,9 @@ namespace Ostaga {
 		e.Dispatch<MouseDown>([&](MouseDown &e) {
 			if (e.button == GLFW_MOUSE_BUTTON_1)
 			{
-				float x = ((float)e.x / 1280.0f) - 0.5f;
-				float z = ((float)e.y / 720.0f) - 0.5f;
-				monsters.emplace(glm::vec3{ 10.0f * x, 1.0f, 10.0f * z });
-
+				e.x = (2.0 * e.x) - 1.0;
+				e.y = (2.0 * e.y) - 1.0;
+				monsters.emplace(glm::vec3{ 10.0f * e.x, 1.0f, 10.0f * e.y });
 				return true;
 			}
 

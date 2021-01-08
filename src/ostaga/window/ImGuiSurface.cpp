@@ -11,6 +11,8 @@
 
 namespace Ostaga {
 
+	// TODO: Use ImGui config file instead
+	//
 	void Config()
 	{
 		ImVec4 *colors = ImGui::GetStyle().Colors;
@@ -82,7 +84,7 @@ namespace Ostaga {
 		style.ScrollbarRounding = 12;
 		style.TabRounding = 2;
 
-		style.WindowMenuButtonPosition = ImGuiDir_None;
+		style.WindowMenuButtonPosition = ImGuiDir_Right;
 		style.ColorButtonPosition = ImGuiDir_Left;
 
 	}
