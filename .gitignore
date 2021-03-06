@@ -12,6 +12,7 @@ profile-results/
 *.rc
 *.aps
 
+renderdoc.cap
 resource.h
 build_vs2019.bat
 imgui.ini

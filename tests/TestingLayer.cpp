@@ -48,7 +48,7 @@ namespace Ostaga {
 			return e1.pos.y	< e2.pos.y;
 		});
 
-		temptation_track = IAudio::LoadFromFile("res/music/temptation.wav");
+		temptation_track = IAudio::LoadFromFile("res/music/cyberbyte.wav");
 		musicPlayer = IAudioPlayer::Create(temptation_track, { AudioMode::Loop });
 		musicPlayer->SetGain(0.25f);
 		musicPlayer->Play();

@@ -54,7 +54,7 @@ namespace Ostaga {
 		colors[ImGuiCol_TabUnfocusedActive] = { 0.52f, 0.52f, 0.52f, 1.00f };
 		colors[ImGuiCol_DockingPreview] = { 0.26f, 0.59f, 0.98f, 0.70f };
 		colors[ImGuiCol_DockingEmptyBg] = { 0.20f, 0.20f, 0.20f, 1.00f };
-		colors[ImGuiCol_PlotLines] = { 0.61f, 0.61f, 0.61f, 1.00f };
+		colors[ImGuiCol_PlotLines] = { 0.90f, 0.70f, 0.00f, 1.00f };
 		colors[ImGuiCol_PlotLinesHovered] = { 1.00f, 0.43f, 0.35f, 1.00f };
 		colors[ImGuiCol_PlotHistogram] = { 0.90f, 0.70f, 0.00f, 1.00f };
 		colors[ImGuiCol_PlotHistogramHovered] = { 1.00f, 0.60f, 0.00f, 1.00f };

@@ -13,6 +13,8 @@
 #include <AudioDevice.h>
 #include <Renderer.h>
 
+#include <Editor.h>
+
 namespace Ostaga {
 
 	using namespace Audio;
@@ -44,7 +46,6 @@ namespace Ostaga {
 		AudioDevice::Init();
 		Renderer::Init({ 10000 });
 		PROFILE_SESSION_END();
-
 	}
 
 	Application::~Application()
@@ -100,7 +101,6 @@ namespace Ostaga {
 				e.y /= m_Window->GetHeight();
 			)
 
-			LOG_INFO(e);
 			return false;
 		});
 
@@ -111,6 +111,7 @@ namespace Ostaga {
 	{
 		OSTAGA_IF_DEBUG(dockspace = CreateRef<ViewportDockspace>(m_Window->GetWidth(), m_Window->GetHeight());)
 		OSTAGA_IF_DEBUG(PushOverlay(dockspace);)
+		OSTAGA_IF_DEBUG(PushLayer(CreateRef<Editor>());)
 		PushLayer(CreateRef<TestingLayer>());
 
 		float lastTime = (float) glfwGetTime();
@@ -123,6 +124,11 @@ namespace Ostaga {
 			float now = (float) glfwGetTime();
 			TimeStep ts{now - lastTime};
 			lastTime = now;
+
+			OSTAGA_IF_DEBUG(
+				m_Analytics.frameTime = (double) ts.GetDeltaTime();
+				m_Analytics.framesPerSecond = 1.0 / m_Analytics.frameTime;
+			)
 
 			Update(ts);
 			m_Window->Update();

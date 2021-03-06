@@ -9,6 +9,12 @@
 
 namespace Ostaga
 {
+	struct ApplicationAnalytics
+	{
+		double frameTime;
+		double framesPerSecond;
+	};
+
 	class Application
 	{
 	public:
@@ -17,6 +23,8 @@ namespace Ostaga
 
 		void Update(TimeStep ts);
 		void OnEvent(Event &e);
+
+		inline ApplicationAnalytics GetAnalytics() { return m_Analytics; }
 
 		// TODO: consider implementing a State system
 		inline void PushLayer(Ref<Layer> layer) { m_Layers.PushLayer(layer); }
@@ -36,6 +44,7 @@ namespace Ostaga
 		Scope<Window> m_Window;
 		OSTAGA_IF_DEBUG(Scope<ImGuiSurface> m_ImGui;)
 		OSTAGA_IF_DEBUG(Ref<ViewportDockspace> dockspace;)
+		ApplicationAnalytics m_Analytics;
 
 		bool m_Running = false;
 		bool m_Iconified = false;

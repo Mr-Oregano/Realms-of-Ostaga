@@ -50,6 +50,16 @@ project "Realms of Ostaga"
 	language "C++"
 	cppdialect "C++17"
 
+	files {
+		"include/**.h",
+		"src/**.cpp",
+
+		"tests/**.h",
+		"tests/**.cpp",
+
+		"res/**.*"
+	}
+
 	filter "configurations:Debug"
 		kind "ConsoleApp"
 
@@ -60,16 +70,6 @@ project "Realms of Ostaga"
 		kind "WindowedApp"
 
 	filter {}
-
-	files {
-		"include/**.h",
-		"src/**.cpp",
-
-		"tests/**.h",
-		"tests/**.cpp",
-
-		"res/**.*"
-	}
 
 	includedirs {
 		"include",
