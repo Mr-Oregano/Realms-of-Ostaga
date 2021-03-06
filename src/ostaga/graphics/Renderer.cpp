@@ -32,6 +32,7 @@ namespace Ostaga { namespace Graphics {
 	};
 
 	static RendererData *renderer = nullptr;
+	static RendererAnalytics analytics = {};
 
 	void SetPipelineState()
 	{
@@ -113,6 +114,11 @@ namespace Ostaga { namespace Graphics {
 		PROFILE_FUNCTION();
 		Shader &shader = *renderer->shader;
 		shader.SetUniformMat4("u_ViewProjection", camera);
+
+		OSTAGA_IF_DEBUG(
+			analytics.drawCalls = 0;
+			analytics.submissions = 0;
+		)
 	}
 
 	void Renderer::SetTextureAtlas(const Ref<TextureAtlas> &atlas)
@@ -120,6 +126,7 @@ namespace Ostaga { namespace Graphics {
 		if (renderer->vertexCount > 0)
 			Flush();
 		renderer->atlas = atlas;
+		OSTAGA_IF_DEBUG(analytics.currentAtlas = atlas;)
 	}
 
 	void Renderer::Draw(const glm::vec2 &pos, const glm::vec2 &size, const TextureAtlasEntry &tex, const glm::vec4 &tint, float rotation)
@@ -138,6 +145,8 @@ namespace Ostaga { namespace Graphics {
 		v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
 		v.texCoords = { tex.x, tex.y, tex.width, tex.height };
 		++vertexCount;
+
+		OSTAGA_IF_DEBUG(++analytics.submissions;)
 	}
 
 	void Renderer::EndScene()
@@ -158,6 +167,13 @@ namespace Ostaga { namespace Graphics {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
 		glDrawArrays(GL_POINTS, 0, (GLsizei) vertexCount);
 		vertexCount = 0;
+
+		OSTAGA_IF_DEBUG(++analytics.drawCalls;)
+	}
+
+	RendererAnalytics Renderer::GetAnalytics()
+	{
+		return analytics;
 	}
 
 } }

@@ -13,6 +13,13 @@ namespace Ostaga { namespace Graphics {
 		size_t batchCapacity;
 	};
 
+	struct RendererAnalytics
+	{
+		int drawCalls;
+		int submissions;
+		Ref<TextureAtlas> currentAtlas;
+	};
+
 	class Renderer {
 
 	public:
@@ -22,6 +29,9 @@ namespace Ostaga { namespace Graphics {
 		static void BeginScene(const glm::mat4 &camera);
 		static void SetTextureAtlas(const Ref<TextureAtlas>& atlas);
 
+		static RendererAnalytics GetAnalytics();
+
+		// TODO: Create chunk mesh generation system. 
 		// Rotations are expected in radians.
 		static void Draw(
 			const glm::vec2 &pos, 

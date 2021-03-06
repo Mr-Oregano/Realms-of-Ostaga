@@ -1,4 +1,3 @@
-
 // Precompiled
 #include "ospch.h"
 //
@@ -6,10 +5,8 @@
 #include "ViewportDockspace.h"
 
 #include <Application.h>
-
-#define IMGUI_DEFINE_MATH_OPERATORS
+#include <Debug.h>
 #include <imgui_internal.h>
-#include <imgui.h>
 
 namespace Ostaga {
 
