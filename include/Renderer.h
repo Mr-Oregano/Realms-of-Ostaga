@@ -5,6 +5,7 @@
 
 #include <TextureAtlas.h>
 #include <Shader.h>
+#include <Geometry.h>
 
 namespace Ostaga { namespace Graphics {
 
@@ -31,7 +32,8 @@ namespace Ostaga { namespace Graphics {
 
 		static RendererAnalytics GetAnalytics();
 
-		// TODO: Create chunk mesh generation system. 
+		static void Draw(Geometry &geometry);
+
 		// Rotations are expected in radians.
 		static void Draw(
 			const glm::vec2 &pos, 

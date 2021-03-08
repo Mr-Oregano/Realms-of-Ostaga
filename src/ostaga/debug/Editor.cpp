@@ -3,6 +3,7 @@
 //
 
 #include <Editor.h>
+#include <Profiler.h>	
 
 #include <Application.h>
 #include <Renderer.h>
@@ -71,7 +72,7 @@ namespace Ostaga {
 			void* contextID = (void*) ((long long) atlas.GetContextID());
 
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - size.x) * 0.5f);
-			ImGui::Image(contextID, size, { 1, 1 }, { 0, 0 });
+			ImGui::Image(contextID, size, { 0, 1 }, { 1, 0 });
 		}
 
 		ImGui::End();

@@ -79,6 +79,11 @@ namespace Ostaga { namespace Graphics {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ContextID);
 	}
 
+	void FrameBuffer::Clear()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 	Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferProps &props)
 	{
 		return CreateRef<FrameBuffer>(props);

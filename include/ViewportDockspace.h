@@ -20,7 +20,7 @@ namespace Ostaga {
 	public:
 		ViewportDockspace(unsigned int width, unsigned int height);
 
-		inline void BeginCapture() const { m_FrameBuffer->Bind(); }
+		inline void BeginCapture() const { m_FrameBuffer->Bind(); m_FrameBuffer->Clear(); }
 		inline void EndCapture() const { m_FrameBuffer->Unbind(); }
 		inline bool IsViewportFocused() const { return m_Focused; }
 		inline unsigned long TextureID() const { return m_FrameBuffer->GetColorAttachmentID(); }

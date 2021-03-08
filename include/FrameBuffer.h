@@ -23,6 +23,7 @@ namespace Ostaga { namespace Graphics {
 		void Unbind();
 
 		void Resize(unsigned int width, unsigned int height);
+		void Clear();
 
 		inline GLuint GetColorAttachmentID() const { return m_ColorAttachment; }
 		inline GLuint GetContextID() const { return m_ContextID; }

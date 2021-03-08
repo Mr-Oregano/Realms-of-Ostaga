@@ -51,7 +51,6 @@ namespace Ostaga { namespace Graphics {
 			"res/shaders/renderer-shader-geom.glsl",
 			"res/shaders/renderer-shader-frag.glsl"
 		);
-		renderer->shader->Bind();
 	}
 	void CreateBufferStore()
 	{
@@ -82,11 +81,6 @@ namespace Ostaga { namespace Graphics {
 		glEnableVertexArrayAttrib(VAO, 2);
 		glEnableVertexArrayAttrib(VAO, 3);
 		glEnableVertexArrayAttrib(VAO, 4);
-
-		// Only need to bind once for now
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		//
 	}
 
 	void Renderer::Init(const RendererProps &props)
@@ -113,6 +107,7 @@ namespace Ostaga { namespace Graphics {
 	{
 		PROFILE_FUNCTION();
 		Shader &shader = *renderer->shader;
+		shader.Bind();
 		shader.SetUniformMat4("u_ViewProjection", camera);
 
 		OSTAGA_IF_DEBUG(
@@ -159,16 +154,27 @@ namespace Ostaga { namespace Graphics {
 	void Renderer::Flush()
 	{
 		PROFILE_FUNCTION();
-
+		
+		GLuint &VAO = renderer->VAO;
+		GLuint &VBO = renderer->VBO;
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
-		renderer->atlas->Bind();
 
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
+		renderer->atlas->Bind();
+		renderer->shader->Bind();
+		glBindVertexArray(VAO);
+
+		glNamedBufferSubData(VBO, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
 		glDrawArrays(GL_POINTS, 0, (GLsizei) vertexCount);
 		vertexCount = 0;
 
 		OSTAGA_IF_DEBUG(++analytics.drawCalls;)
+	}
+
+	void Renderer::Draw(Geometry &geometry)
+	{
+		geometry.Bind();
+		geometry.Draw();
 	}
 
 	RendererAnalytics Renderer::GetAnalytics()

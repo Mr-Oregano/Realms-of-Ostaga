@@ -78,7 +78,7 @@ namespace Ostaga {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
-		m_Focused = ImGui::IsWindowHovered();
+		m_Focused = ImGui::IsWindowFocused();
 
 		size_t textureID = m_FrameBuffer->GetColorAttachmentID();
 		ImVec2 drawRegion = ImGui::GetContentRegionAvail();

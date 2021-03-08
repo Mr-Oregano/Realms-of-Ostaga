@@ -16,7 +16,7 @@ namespace Ostaga {
 	extern Ref<Audio::IAudio> monster_soundfx;
 
 	extern Ref<Graphics::TextureAtlas> atlas;
-	extern Graphics::TextureAtlasEntry forest_tile;
+	extern Graphics::TextureAtlasEntry grass_tile;
 	extern Graphics::TextureAtlasEntry grass1;
 	extern Graphics::TextureAtlasEntry grass2;
 	extern Graphics::TextureAtlasEntry grass3;
@@ -66,26 +66,26 @@ namespace Ostaga {
 		}
 	};
 
-	struct Entity
+	struct EntityTest
 	{
 		Graphics::TextureAtlasEntry texture;
 		
 		glm::vec2 pos;
 		glm::vec2 size;
 
-		Entity(const Graphics::TextureAtlasEntry &texture, const glm::vec2 &pos, const glm::vec2 &size)
+		EntityTest(const Graphics::TextureAtlasEntry &texture, const glm::vec2 &pos, const glm::vec2 &size)
 			: texture(texture), pos(pos), size(size)
 		{}
 	};
 
-	struct Tile
+	struct TileTest
 	{
 		Graphics::TextureAtlasEntry texture;
 		
 		glm::vec2 pos;
 		glm::vec2 size;
 		
-		Tile(const Graphics::TextureAtlasEntry &texture, const glm::vec2 &pos, const glm::vec2 &size)
+		TileTest(const Graphics::TextureAtlasEntry &texture, const glm::vec2 &pos, const glm::vec2 &size)
 			: texture(texture), pos(pos), size(size)
 		{
 		}

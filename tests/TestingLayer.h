@@ -19,8 +19,6 @@ namespace Ostaga {
 	{
 	public:
 		std::queue<Monster> monsters;
-		std::vector<Tile> tiles;
-		std::vector<Entity> entities;
 
 		Ref<Audio::IAudio> temptation_track;
 		Ref<Audio::IAudioPlayer> musicPlayer;

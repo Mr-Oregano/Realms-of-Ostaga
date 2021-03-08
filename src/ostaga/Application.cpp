@@ -40,6 +40,7 @@ namespace Ostaga {
 
 		m_Window = CreateScope<Window>(props);
 		m_Window->SetEventCallback(std::bind(&::Ostaga::Application::OnEvent, this, std::placeholders::_1));
+		m_Window->SetClearColor({ 0.f, 0.f, 0.f, 1.f });
 
 		OSTAGA_IF_DEBUG(m_ImGui = CreateScope<ImGuiSurface>(*m_Window);)
 
