@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <Layer.h>
-#include <Entities.h>
 
 #include <IAudio.h>
 #include <IAudioPlayer.h>
@@ -18,8 +17,6 @@ namespace Ostaga {
 	class TestingLayer : public Layer
 	{
 	public:
-		std::queue<Monster> monsters;
-
 		Ref<Audio::IAudio> temptation_track;
 		Ref<Audio::IAudioPlayer> musicPlayer;
 

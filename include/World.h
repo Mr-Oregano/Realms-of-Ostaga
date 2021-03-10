@@ -8,8 +8,8 @@
 
 #include <Shader.h>
 #include <CameraController.h>
-#include <TerrainChunk.h>
-#include <BatchGroup.h>
+#include <WorldChunk.h>
+#include <Scene.h>
 
 #include <Maths.h>
 
@@ -20,7 +20,9 @@ namespace Ostaga {
 	class World
 	{
 	public:
-		World();
+		// Chunk width and height
+		//
+		World(int width, int height, int seed);
 
 		void OnRender();
 		void OnUpdate(TimeStep ts);
@@ -28,15 +30,21 @@ namespace Ostaga {
 		void OnGui();
 
 	private:
-		void GenerateChunk(int chunkX, int chunkY, int seed);
+		WorldChunk GenerateChunk(int chunkX, int chunkY, int seed);
+
+		// Utility
+		glm::vec2 ChunkToTileCoords(float chunkX, float chunkY);
+		glm::vec2 TileToXYCoords(float tileX, float tileY);
+		glm::vec2 XYToTileCoords(float x, float y);
+		glm::vec2 TileToChunkCoords(float tileX, float tileY);
 
 	private:
-		std::vector<Ref<TerrainChunk>> m_Chunks;
-		std::vector<Ref<Graphics::BatchGroup>> m_EntityChunks;
-		Ref<Graphics::Shader> m_Shader;
+		int m_Width;
+		int m_Height;
+		int m_Seed;
 		CameraController m_CameraControl;
-
-	private:
-		static const int CHUNK_SIZE;
+		
+		std::vector<WorldChunk> m_Chunks;
+		Ref<Scene> m_Scene;
 	};
 }

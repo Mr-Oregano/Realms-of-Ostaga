@@ -21,7 +21,7 @@ namespace Ostaga {
 		static const int TILE_SIZE;
 	};
 
-	class TerrainChunk : public Graphics::Geometry
+	class TerrainMesh : public Graphics::Geometry
 	{
 	private:
 		struct Vertex
@@ -32,7 +32,7 @@ namespace Ostaga {
 		};
 
 	public:
-		TerrainChunk(const Ref<Graphics::TextureAtlas> &atlas);
+		TerrainMesh(const Ref<Graphics::TextureAtlas> &atlas);
 
 		virtual void Bind() override;
 		virtual void Draw() override;

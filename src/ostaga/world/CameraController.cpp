@@ -10,10 +10,10 @@
 
 namespace Ostaga {
 
-	CameraController::CameraController(const OrthoCamera &camera)
-		: m_Camera(camera)
+	CameraController::CameraController(const OrthoCamera &camera, const ControllerProps &props)
+		: m_Camera(camera), m_Props(props)
 	{
-		m_Position = { 10240.f, 10240.f, 0.f };
+		m_Position = { props.x, props.y, 0.f };
 	}
 
 	void CameraController::OnEvent(Event &e)
@@ -33,6 +33,7 @@ namespace Ostaga {
 
 	void CameraController::OnUpdate(TimeStep ts)
 	{
+		PROFILE_FUNCTION();
 		glm::vec3 dir = { 0.f, 0.f, 0.f };
 
 		dir.x = (float)(m_KeyMap[GLFW_KEY_D] - m_KeyMap[GLFW_KEY_A]);
@@ -41,10 +42,9 @@ namespace Ostaga {
 		if (dir != glm::vec3{ 0.f, 0.f, 0.f })
 			dir = glm::normalize(dir);
 
-		m_Position += dir * (100.0f * ts);
+		m_Position += dir * (m_Props.speed * ts);
 
-		glm::mat4 view = glm::translate(glm::mat4{1.f}, m_Position)
-					   * glm::scale(glm::mat4{1.f}, { 0.75f, 0.75f, 1.0f });
+		glm::mat4 view = glm::translate(glm::mat4{1.f}, m_Position);
 		m_Camera.SetView(view);
 	}
 

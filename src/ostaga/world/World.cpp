@@ -13,8 +13,7 @@ namespace Ostaga {
 
 	using namespace Graphics;
 
-	const int WORLD_SIZE = 20;
-	const int World::CHUNK_SIZE = 16;
+	static entt::entity player;
 
 	// TODO: Temporary assets, should create an Asset Manager
 	static Ref<TextureAtlas> atlas;
@@ -27,12 +26,12 @@ namespace Ostaga {
 	static TextureAtlasEntry grass3;
 	static TextureAtlasEntry grass4;
 	static TextureAtlasEntry boulder;
-	//
-
-	World::World()
-		: m_CameraControl(OrthoCamera(-1280/2, 1280/2, -720/2, 720/2))
+	static TextureAtlasEntry player_tex;
+	static Ref<Graphics::Shader> shader;
+	
+	static void LoadAssets()
 	{
-		m_Shader = Shader::LoadFromFiles(
+		shader = Shader::LoadFromFiles(
 			"res/shaders/terrain-shader-vert.glsl",
 			"res/shaders/terrain-shader-geom.glsl",
 			"res/shaders/terrain-shader-frag.glsl"
@@ -48,18 +47,54 @@ namespace Ostaga {
 		grass3 = atlas->AddEntry({ 176, 0, 16, 16 });
 		grass4 = atlas->AddEntry({ 176, 16, 16, 16 });
 		boulder = atlas->AddEntry({ 192, 0, 64, 64 });
+		player_tex = atlas->AddEntry({ 2, 2, 29, 45 });
+	}
+	//
 
-		for (int i = 0; i < WORLD_SIZE * WORLD_SIZE; ++i)
+	World::World(int width, int height, int seed)
+		: m_Width(width), m_Height(height), m_Seed(seed)
+	{
+		PROFILE_FUNCTION();
+		// Temporary
+		LoadAssets();
+		//
+
+		glm::vec2 worldCenter = { width / 2.f, height / 2.f };
+		worldCenter = ChunkToTileCoords(worldCenter.x, worldCenter.y);
+		worldCenter = TileToXYCoords(worldCenter.x, worldCenter.y);
+
+		ControllerProps props;
+		props.speed = 45.0f;
+		props.x = worldCenter.x;
+		props.y = worldCenter.y;
+
+		OrthoCamera camera = OrthoCamera(-1280 / 4, 1280 / 4, -720 / 4, 720 / 4);
+		m_CameraControl = CameraController(camera, props);
+
+		m_Scene = CreateRef<Scene>(camera);
+		m_Scene->atlas = atlas;
+
+		// Player creation: Temporary
+		player = m_Scene->entities.create();
+		glm::vec2 view = m_CameraControl.GetPosition();
+		glm::vec2 size = { player_tex.width * atlas->GetWidth(), player_tex.height * atlas->GetHeight() };
+		m_Scene->entities.emplace<CTransform>(player, glm::vec2{ view.x, view.y }, size, 0.f);
+		m_Scene->entities.emplace<CRenderable>(player, player_tex);
+		//
+
+		m_Chunks.reserve(width * height);
+		for (int i = 0; i < width * height; ++i)
 		{
-			int ChunkX = i % WORLD_SIZE;
-			int ChunkY = i / WORLD_SIZE;
+			int ChunkX = i % width;
+			int ChunkY = i / width;
 
-			GenerateChunk(ChunkX, ChunkY, 0);
+			m_Chunks.push_back(GenerateChunk(ChunkX, ChunkY, seed));
 		}
 	}
 
 	float TerrainGenerator(float x, float y, int seed)
 	{
+		PROFILE_FUNCTION();
 		x /= 10;
 		y /= 10;
 		Random::SetSeed(seed);
@@ -83,160 +118,133 @@ namespace Ostaga {
 		return output_noise / divisor;
 	}
 
-	void World::GenerateChunk(int chunkX, int chunkY, int seed)
+	WorldChunk World::GenerateChunk(int chunkX, int chunkY, int seed)
 	{
-		auto chunk = CreateRef<TerrainChunk>(atlas);
-		auto entities = CreateRef<BatchGroup>(atlas);
+		PROFILE_FUNCTION();
+		static WorldChunk chunk;
 
-		chunkX *= CHUNK_SIZE;
-		chunkY *= CHUNK_SIZE;
+		chunk.mesh = CreateRef<TerrainMesh>(atlas);
+		chunk.entities = CreateRef<entt::registry>();
 
+		glm::ivec2 tile = (glm::ivec2) ChunkToTileCoords((float) chunkX, (float) chunkY);
+
+		// Temporary
 		std::vector<float> noiseMap;
-		noiseMap.reserve(CHUNK_SIZE * CHUNK_SIZE);
+		//
 
-		for (int y = chunkY; y < chunkY + CHUNK_SIZE; ++y)
+		for (int y = tile.y; y < tile.y + WorldChunk::CHUNK_SIZE; ++y)
 		{
-			for (int x = chunkX; x < chunkX + CHUNK_SIZE; ++x)
+			for (int x = tile.x; x < tile.x + WorldChunk::CHUNK_SIZE; ++x)
 			{
-				Tile tile = {};
-				tile.x = (float) x * Tile::TILE_SIZE;
-				tile.y = (float) y * Tile::TILE_SIZE;
+				Tile t;
+				t.x = (float) x * Tile::TILE_SIZE;
+				t.y = (float) y * Tile::TILE_SIZE;
 
+				// Temporary - TODO: Biome generation system
 				float noise = TerrainGenerator(x * 0.05f, y * 0.05f, seed);
 				noiseMap.push_back(noise);
-				if (noise > 0.5f) // Grass land
-					tile.texture = grass_tile;
-				else // Pine forest
-					tile.texture = pine_tile;
+				t.texture = noise > 0.5f ? grass_tile : pine_tile;
+				//
 
-				chunk->PushTile(tile);
+				chunk.mesh->PushTile(t);
 			}
 		}
 
+		chunk.mesh->GenerateMesh();
+
+		// Temporary
 		Random::SetSeed((unsigned int) (chunkX + chunkY + seed + 1));
-		for (int i = 0; i < 10; ++i)
+		//
+
+		for (int i = 0; i < 50; ++i)
 		{
-			float offsetX = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
-			float offsetY = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
+			entt::entity id = chunk.entities->create();
 
-			Entity e = {};
-			e.x = (float) chunkX * Tile::TILE_SIZE + offsetX;
-			e.y = (float) chunkY * Tile::TILE_SIZE + offsetY;
+			// Temporary - Will be implemented in biome generation system
+			glm::vec2 inChunk = { Random::Float(), Random::Float() };
+			glm::ivec2 tile = (glm::ivec2) ChunkToTileCoords(inChunk.x, inChunk.y);
+			glm::vec2 pos = ChunkToTileCoords(chunkX + inChunk.x, chunkY + inChunk.y);
+			pos = TileToXYCoords(pos.x, pos.y);
+			//
 
-			int tileX = (int) (offsetX / Tile::TILE_SIZE);
-			int tileY = (int) (offsetY / Tile::TILE_SIZE);
+			TextureAtlasEntry texture;
 
-			if (noiseMap[tileX + tileY * CHUNK_SIZE] > 0.5f) // Grass land
-				e.texture = oaktree;
+			if (noiseMap[tile.x + tile.y * WorldChunk::CHUNK_SIZE] > 0.5f) // Grass land
+				texture = oaktree;
+			else
+				texture = pinetree;
 
-			e.width = e.texture.width * atlas->GetWidth() * 2;
-			e.height = e.texture.height * atlas->GetHeight() * 2;
+			float width = texture.width * atlas->GetWidth();
+			float height = texture.height * atlas->GetHeight();
+			glm::vec2 size = { width, height };
 
-			entities->PushEntity(e);
+			chunk.entities->emplace<CTransform>(id, pos, size, 0.f);
+			chunk.entities->emplace<CRenderable>(id, texture);
 		}
 
-		for (int i = 0; i < 150; ++i)
-		{
-			float offsetX = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
-			float offsetY = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
+		return chunk;
+	}
 
-			Entity e = {};
-			e.x = (float)chunkX * Tile::TILE_SIZE + offsetX;
-			e.y = (float)chunkY * Tile::TILE_SIZE + offsetY;
+	glm::vec2 World::ChunkToTileCoords(float chunkX, float chunkY)
+	{
+		return { chunkX * WorldChunk::CHUNK_SIZE, chunkY * WorldChunk::CHUNK_SIZE };
+	}
 
-			int tileX = (int)(offsetX / Tile::TILE_SIZE);
-			int tileY = (int)(offsetY / Tile::TILE_SIZE);
+	glm::vec2 World::TileToXYCoords(float tileX, float tileY)
+	{
+		return { tileX * Tile::TILE_SIZE, tileY * Tile::TILE_SIZE };
+	}
 
-			if (noiseMap[tileX + tileY * CHUNK_SIZE] <= 0.5f) // Pine forest
-			{
-				if (Random::Float() < 0.9f)
-					e.texture = pinetree;
-				else
-					e.texture = boulder;
-			}
+	glm::vec2 World::XYToTileCoords(float x, float y)
+	{
+		return { x / Tile::TILE_SIZE, y / Tile::TILE_SIZE };
+	}
 
-			e.width = e.texture.width * atlas->GetWidth() * 2;
-			e.height = e.texture.height * atlas->GetHeight() * 2;
-
-			entities->PushEntity(e);
-		}
-
-		for (int i = 0; i < 1000; ++i)
-		{
-			float offsetX = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
-			float offsetY = Random::Float() * Tile::TILE_SIZE * CHUNK_SIZE;
-
-			int tileX = (int)(offsetX / Tile::TILE_SIZE);
-			int tileY = (int)(offsetY / Tile::TILE_SIZE);
-
-			if (noiseMap[tileX + tileY * CHUNK_SIZE] <= 0.5f)
-				continue;
-
-			Entity e = {};
-			e.x = (float)chunkX * Tile::TILE_SIZE + offsetX;
-			e.y = (float)chunkY * Tile::TILE_SIZE + offsetY;
-
-			switch (Random::Integer() % 4)
-			{
-			case 0: e.texture = grass1; break;
-			case 1: e.texture = grass2; break;
-			case 2: e.texture = grass3; break;
-			case 3: e.texture = grass4; break;
-			}
-
-			e.width = e.texture.width * atlas->GetWidth() * 2;
-			e.height = e.texture.height * atlas->GetHeight() * 2;
-
-			entities->PushEntity(e);
-		}
-
-		chunk->GenerateMesh();
-		m_Chunks.push_back(chunk);
-
-		entities->GenerateMesh();
-		m_EntityChunks.push_back(entities);
+	glm::vec2 World::TileToChunkCoords(float tileX, float tileY)
+	{
+		return { tileX / WorldChunk::CHUNK_SIZE, tileY / WorldChunk::CHUNK_SIZE };
 	}
 
 	void World::OnRender()
 	{
-		m_Shader->Bind();
-		m_Shader->SetUniformMat4("u_ViewProjection", m_CameraControl.GetCamera().GetViewProj());
+		PROFILE_FUNCTION();
+		shader->Bind();
+		shader->SetUniformMat4("u_ViewProjection", m_CameraControl.GetCamera().GetViewProj());
+		m_Scene->camera = m_CameraControl.GetCamera();
 		
 		glm::vec3 &center = m_CameraControl.GetPosition();
-		int left = (int) (center.x - 1500/2.f) / (Tile::TILE_SIZE * CHUNK_SIZE);
-		int right = (int) (center.x + 1500/2.f) / (Tile::TILE_SIZE * CHUNK_SIZE);
-		int top = (int) (center.y - 1000/2.f) / (Tile::TILE_SIZE * CHUNK_SIZE);
-		int bottom = (int) (center.y + 1000/2.f) / (Tile::TILE_SIZE * CHUNK_SIZE);
+		int left = (int) (center.x - 1500/2.f) / (Tile::TILE_SIZE * WorldChunk::CHUNK_SIZE);
+		int right = (int) (center.x + 1500/2.f) / (Tile::TILE_SIZE * WorldChunk::CHUNK_SIZE);
+		int top = (int) (center.y - 1000/2.f) / (Tile::TILE_SIZE * WorldChunk::CHUNK_SIZE);
+		int bottom = (int) (center.y + 1000/2.f) / (Tile::TILE_SIZE * WorldChunk::CHUNK_SIZE);
 
 		for (int ChunkX = left; ChunkX <= right + 1; ++ChunkX)
 		{
 			for (int ChunkY = top; ChunkY <= bottom + 1; ++ChunkY)
 			{
-				int index = ChunkX + ChunkY * WORLD_SIZE;
+				int index = ChunkX + ChunkY * m_Width;
 				if (index < 0 || index >= m_Chunks.size())
 					continue;
 
-				TerrainChunk &chunk = *m_Chunks[index];
-				Renderer::Draw(chunk);
+				m_Scene->chunks.push_back(m_Chunks[index]);
 			}
 		}
 
-		for (int ChunkX = left; ChunkX <= right + 1; ++ChunkX)
-		{
-			for (int ChunkY = top; ChunkY <= bottom + 1; ++ChunkY)
-			{
-				int index = ChunkX + ChunkY * WORLD_SIZE;
-				if (index < 0 || index >= m_Chunks.size())
-					continue;
+		// Temporary
+		auto& playerTransform = m_Scene->entities.get<CTransform>(player);
+		playerTransform.pos = { center.x, center.y };
+		//
 
-				BatchGroup &chunk = *m_EntityChunks[index];
-				Renderer::Draw(chunk);
-			}
-		}
+		Renderer::Draw(*m_Scene);
+
+		// Temporary
+		m_Scene->chunks.clear();
+		//
 	}
 
 	void World::OnUpdate(TimeStep ts)
 	{
+		PROFILE_FUNCTION();
 		m_CameraControl.OnUpdate(ts);
 	}
 

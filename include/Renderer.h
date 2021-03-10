@@ -7,6 +7,8 @@
 #include <Shader.h>
 #include <Geometry.h>
 
+#include <Scene.h>
+
 namespace Ostaga { namespace Graphics {
 
 	struct RendererProps
@@ -26,25 +28,17 @@ namespace Ostaga { namespace Graphics {
 	public:
 		static void Init(const RendererProps& props);
 		static void Shutdown();
-
-		static void BeginScene(const glm::mat4 &camera);
-		static void SetTextureAtlas(const Ref<TextureAtlas>& atlas);
+		
+		static void Draw(Scene &scene);
 
 		static RendererAnalytics GetAnalytics();
-
-		static void Draw(Geometry &geometry);
-
-		// Rotations are expected in radians.
-		static void Draw(
-			const glm::vec2 &pos, 
-			const glm::vec2 &size, 
-			const TextureAtlasEntry &tex, 
-			const glm::vec4 &tint = glm::vec4{1.0f}, 
-			float rotation = 0);
-		
-		static void EndScene();
-	
+			
 	private:
+		static void SetTextureAtlas(const Ref<TextureAtlas>& atlas);
+		
+		static void BeginScene(const glm::mat4 &camera);
+		static void EndScene();
+
 		static void Flush();
 
 	};

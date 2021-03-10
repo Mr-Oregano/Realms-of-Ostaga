@@ -24,13 +24,12 @@ namespace Ostaga {
 
 	void TestingLayer::OnStartup()
 	{
-		LoadAssets();
-
-		world = CreateScope<World>();
+		world = CreateScope<World>(20, 20, 0);
 
 		temptation_track = IAudio::LoadFromFile("res/music/cyberbyte.wav");
 		musicPlayer = IAudioPlayer::Create(temptation_track, { AudioMode::Loop });
 		musicPlayer->SetGain(0.25f);
+		OSTAGA_IF_DEBUG(, musicPlayer->Play());
 	}
 
 	void TestingLayer::OnShutdown()

@@ -3,32 +3,34 @@
 #include "ospch.h"
 //
 
-#include <TerrainChunk.h>
+#include <TerrainMesh.h>
 
 namespace Ostaga {
 
 	using namespace Graphics;
 
-	const int Tile::TILE_SIZE = 64;
+	const int Tile::TILE_SIZE = 32;
 
-	TerrainChunk::TerrainChunk(const Ref<TextureAtlas> &atlas)
+	TerrainMesh::TerrainMesh(const Ref<TextureAtlas> &atlas)
 		: m_Atlas(atlas)
 	{
 	}
 
-	void TerrainChunk::Bind()
+	void TerrainMesh::Bind()
 	{
 		m_Atlas->Bind();
 		glBindVertexArray(m_VaoID);
 	}
 
-	void TerrainChunk::Draw()
+	void TerrainMesh::Draw()
 	{
+		PROFILE_FUNCTION();
 		glDrawArrays(GL_POINTS, 0, (GLsizei) (m_ChunkMesh.size() * sizeof(Vertex)));
 	}
 
-	void TerrainChunk::PushTile(Tile tile)
+	void TerrainMesh::PushTile(Tile tile)
 	{
+		PROFILE_FUNCTION();
 		m_ChunkMesh.push_back({
 			{ tile.x, tile.y, Tile::TILE_SIZE, Tile::TILE_SIZE },
 			{ tile.texture.x, tile.texture.y, tile.texture.width, tile.texture.height },
@@ -36,8 +38,9 @@ namespace Ostaga {
 		});
 	}
 
-	void TerrainChunk::GenerateMesh()
+	void TerrainMesh::GenerateMesh()
 	{
+		PROFILE_FUNCTION();
 		// TODO: Implement greedy meshing to reduce geometry
 
 		glCreateBuffers(1, &m_VertexBufferID);

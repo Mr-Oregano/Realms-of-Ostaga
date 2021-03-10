@@ -118,30 +118,96 @@ namespace Ostaga { namespace Graphics {
 
 	void Renderer::SetTextureAtlas(const Ref<TextureAtlas> &atlas)
 	{
+		PROFILE_FUNCTION();
 		if (renderer->vertexCount > 0)
 			Flush();
 		renderer->atlas = atlas;
 		OSTAGA_IF_DEBUG(analytics.currentAtlas = atlas;)
 	}
 
-	void Renderer::Draw(const glm::vec2 &pos, const glm::vec2 &size, const TextureAtlasEntry &tex, const glm::vec4 &tint, float rotation)
+	void Renderer::Draw(Scene &scene)
 	{
-		auto &vertices = renderer->vertices;
-		auto &vertexCount = renderer->vertexCount;
-		auto &atlas = *renderer->atlas;
+		PROFILE_FUNCTION();
+		auto &atlas = *scene.atlas;
+		auto view = scene.entities.view<CTransform, CRenderable>();
 
-		if (vertexCount >= vertices.size())
-			Flush();
+		// Temporary - TODO: currently causes a bottleneck
+		std::vector<Vertex> entityQueue;
+		//
 
-		Vertex &v = vertices[vertexCount];
-		v.dimensions = { pos.x, pos.y, size.x, size.y };
-		v.rotation = rotation;
-		v.tint = tint;
-		v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
-		v.texCoords = { tex.x, tex.y, tex.width, tex.height };
-		++vertexCount;
+		{
+			PROFILE_SCOPE("Queueing entities");
+			for (auto [entity, transform, renderable] : view.each())
+			{
+				Vertex v;
+				v.dimensions = { transform.pos.x, transform.pos.y, transform.size.x, transform.size.y };
+				v.rotation = transform.rotation;
+				v.tint = renderable.tint;
+				v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
+				v.texCoords = { renderable.texture.x, renderable.texture.y, renderable.texture.width, renderable.texture.height };
 
-		OSTAGA_IF_DEBUG(++analytics.submissions;)
+				entityQueue.push_back(v);
+			}
+
+			for (auto &chunk : scene.chunks)
+			{
+				auto chunkView = chunk.entities->view<CTransform, CRenderable>();
+
+				for (auto [entity, transform, renderable] : chunkView.each())
+				{
+					Vertex v;
+					v.dimensions = { transform.pos.x, transform.pos.y, transform.size.x, transform.size.y };
+					v.rotation = transform.rotation;
+					v.tint = renderable.tint;
+					v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
+					v.texCoords = { renderable.texture.x, renderable.texture.y, renderable.texture.width, renderable.texture.height };
+
+					entityQueue.push_back(v);
+				}
+
+				PROFILE_SCOPE("Drawing terrain mesh");
+				chunk.mesh->Bind();
+				chunk.mesh->Draw();
+			}
+		}
+		
+
+		{
+			PROFILE_SCOPE("Sorting queue");
+			std::sort(entityQueue.begin(), entityQueue.end(), [](Vertex &v1, Vertex &v2) -> bool
+			{
+				return (v1.dimensions.y + v1.dimensions.w / 2) < (v2.dimensions.y + v2.dimensions.w / 2);
+			});
+		}
+
+		SetTextureAtlas(scene.atlas);
+
+		{
+			PROFILE_SCOPE("Drawing scene");
+			BeginScene(scene.camera.GetViewProj());
+			atlas.Bind();
+
+			for (Vertex &drawCommand : entityQueue)
+			{
+				auto &vertices = renderer->vertices;
+				auto &vertexCount = renderer->vertexCount;
+
+				if (vertexCount >= vertices.size())
+					Flush();
+
+				Vertex &v = vertices[vertexCount];
+				v.dimensions = drawCommand.dimensions;
+				v.rotation = drawCommand.rotation;
+				v.tint = drawCommand.tint;
+				v.texelSize = { atlas.GetWidth(), atlas.GetHeight() };
+				v.texCoords = drawCommand.texCoords;
+				++vertexCount;
+
+				OSTAGA_IF_DEBUG(++analytics.submissions;)
+			}
+
+			EndScene();
+		}
 	}
 
 	void Renderer::EndScene()
@@ -160,8 +226,6 @@ namespace Ostaga { namespace Graphics {
 		auto &vertices = renderer->vertices;
 		auto &vertexCount = renderer->vertexCount;
 
-		renderer->atlas->Bind();
-		renderer->shader->Bind();
 		glBindVertexArray(VAO);
 
 		glNamedBufferSubData(VBO, 0, (GLsizeiptr) (vertexCount * sizeof(Vertex)), vertices.data());
@@ -169,12 +233,6 @@ namespace Ostaga { namespace Graphics {
 		vertexCount = 0;
 
 		OSTAGA_IF_DEBUG(++analytics.drawCalls;)
-	}
-
-	void Renderer::Draw(Geometry &geometry)
-	{
-		geometry.Bind();
-		geometry.Draw();
 	}
 
 	RendererAnalytics Renderer::GetAnalytics()

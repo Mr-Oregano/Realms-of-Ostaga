@@ -10,10 +10,19 @@
 
 namespace Ostaga {
 
+	struct ControllerProps
+	{
+		float speed;
+		float x;
+		float y;
+	};
+
 	class CameraController
 	{
 	public:
-		CameraController(const OrthoCamera &camera);
+		CameraController(
+			const OrthoCamera &camera = OrthoCamera(-1, 1, 1, -1), 
+			const ControllerProps &props = { 1.f, 0.f, 0.f });
 
 		void OnEvent(Event &e);
 		void OnUpdate(TimeStep ts);
@@ -27,5 +36,7 @@ namespace Ostaga {
 
 		glm::vec3 m_Position;
 		std::unordered_map<int, bool> m_KeyMap;
+
+		ControllerProps m_Props;
 	};
 }
