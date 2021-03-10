@@ -81,6 +81,7 @@ project "Realms of Ostaga"
 		"vendor/stb_image/include",
 		"vendor/imgui",
 		"vendor/glm",
+		"vendor/entt/single_include",
 		"vendor/openal-soft/include",
 		"vendor/dr_wav/include"
 	}
