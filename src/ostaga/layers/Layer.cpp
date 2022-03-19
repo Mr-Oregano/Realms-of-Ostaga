@@ -116,4 +116,10 @@ namespace Ostaga {
 		for (; it != m_Layers.rend(); ++it)
 			(*it)->OnGui();
 	}
+	
+	void LayerStack::Clear()
+	{
+		m_Layers.clear();
+		m_Overlays.clear();
+	}
 }

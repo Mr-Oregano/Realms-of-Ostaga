@@ -63,6 +63,8 @@ namespace Ostaga {
 		void OnEvent(Event &e);
 		void OnGui();
 
+		void Clear();
+
 	private:
 		std::vector<Ref<Layer>> m_Layers;
 		std::vector<Ref<Layer>> m_Overlays;

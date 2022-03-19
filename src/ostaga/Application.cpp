@@ -134,5 +134,9 @@ namespace Ostaga {
 			Update(ts);
 			m_Window->Update();
 		}
+		
+		// NOTE: Clear out all layers and ensure that destructors are called.
+		//
+		m_Layers.Clear();
 	}
 }
