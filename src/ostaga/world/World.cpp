@@ -258,7 +258,7 @@ namespace Ostaga {
 		ImGui::Begin("World");
 
 		if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-			ImGui::InputFloat3("Position", glm::value_ptr(m_CameraControl.GetPosition()), 3);
+			ImGui::InputFloat3("Position", glm::value_ptr(m_CameraControl.GetPosition()));
 
 		ImGui::End();
 	}

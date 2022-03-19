@@ -1,3 +1,6 @@
+TARGET_DIR = "bin/%{cfg.buildcfg}_%{cfg.architecture}"
+OBJ_DIR = "bin-int/%{cfg.buildcfg}_%{cfg.architecture}"
+
 workspace "Realms of Ostaga"
 
 	startproject "Realms of Ostaga"
@@ -34,8 +37,8 @@ workspace "Realms of Ostaga"
 
 	filter {}
 
-	targetdir "bin/%{cfg.buildcfg}_%{cfg.architecture}"
-	objdir "bin-int/%{cfg.buildcfg}_%{cfg.architecture}"
+	targetdir(TARGET_DIR)
+	objdir(OBJ_DIR)
 
 	group "Vendor"
 		include "vendor/glfw"
@@ -122,3 +125,5 @@ project "Realms of Ostaga"
 		}
 
 	filter {}
+
+	postbuildcommands { "cp ./vendor/openal-soft/" .. TARGET_DIR .. "/OpenAL32.dll ./" .. TARGET_DIR .. "/" }

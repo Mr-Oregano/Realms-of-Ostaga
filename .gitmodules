@@ -1,6 +1,6 @@
 [submodule "vendor/glfw"]
 	path = vendor/glfw
-	url = https://gitlab.com/Sympleque/glfw.git
+	url = https://github.com/Mr-Oregano/glfw.git
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
@@ -9,10 +9,11 @@
 	url = https://github.com/g-truc/glm.git
 [submodule "vendor/openal-soft"]
 	path = vendor/openal-soft
-	url = https://gitlab.com/Sympleque/openal-soft.git
+	url = https://github.com/Mr-Oregano/openal-soft.git
 [submodule "vendor/imgui"]
 	path = vendor/imgui
-	url = https://gitlab.com/Sympleque/imgui.git
+	url = https://github.com/Mr-Oregano/imgui.git
+	branch = docking
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = https://github.com/skypjack/entt.git

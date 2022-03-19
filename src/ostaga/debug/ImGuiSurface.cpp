@@ -3,11 +3,10 @@
 #include "ospch.h"
 //
 
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-#include "examples/imgui_impl_opengl3.cpp"
-#include "examples/imgui_impl_glfw.cpp"
-
 #include "ImGuiSurface.h"
+
+#include "backends/imgui_impl_opengl3.cpp"
+#include "backends/imgui_impl_glfw.cpp"
 
 namespace Ostaga {
 
@@ -65,7 +64,7 @@ namespace Ostaga {
 		colors[ImGuiCol_NavWindowingDimBg] = { 0.80f, 0.80f, 0.80f, 0.20f };
 		colors[ImGuiCol_ModalWindowDimBg] = { 0.80f, 0.80f, 0.80f, 0.35f };
 
-		ImGui::SetColorEditOptions(ImGuiColorEditFlags_HEX);
+		ImGui::SetColorEditOptions(ImGuiColorEditFlags_DisplayHex);
 
 		ImGuiStyle &style = ImGui::GetStyle();
 		ImGuiIO &io = ImGui::GetIO();

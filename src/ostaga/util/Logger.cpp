@@ -52,7 +52,7 @@ namespace Ostaga {
 		s_Logger->set_level(spdlog::level::trace);
 
 		auto color_sink = static_cast<spdlog::sinks::stdout_color_sink_mt*>(s_Logger->sinks()[0].get());
-		color_sink->set_color(spdlog::level::info, color_sink->CYAN);
+		color_sink->set_color(spdlog::level::info, 0xa);
 	}
 
 	void Logger::Shutdown()
