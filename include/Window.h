@@ -1,14 +1,13 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <Ostaga.h>
 
 #include <Event.h>
 #include <KeyEvent.h>
 #include <MouseEvent.h>
 #include <SystemEvent.h>
+
+#include <GLFW/glfw3.h>
 
 namespace Ostaga {
 
@@ -45,10 +44,10 @@ namespace Ostaga {
 		inline GLFWwindow* NativeWindowHandle() const { return m_WindowPtr; }
 
 		inline bool IsVysncEnabled() const { return m_Data.props.vysnc; }
-		inline void SetVsync(bool vsync) { m_Data.props.vysnc = vsync; glfwSwapInterval(vsync ? 1 : 0); }
+		void SetVsync(bool vsync);
 
 		void SetWindowMode(WindowMode mode);
-		inline void SetClearColor(const glm::vec4 &color) { glClearColor(color.r, color.g, color.b, color.a); }
+		void SetClearColor(const glm::vec4 &color);
 
 		inline bool IsVisible() const { return m_Visible; }
 		void SetVisible(bool visible);

@@ -5,6 +5,8 @@
 
 #include "Window.h"
 
+#include <glad/glad.h>
+
 namespace Ostaga {
 
 	bool Window::s_InitializedGLFW = false;
@@ -270,8 +272,19 @@ namespace Ostaga {
 		glfwHideWindow(m_WindowPtr);
 	}
 
+	void Window::SetVsync(bool vsync)
+	{
+		m_Data.props.vysnc = vsync; 
+		glfwSwapInterval(vsync ? 1 : 0);
+	}
+
 	void Window::SetWindowMode(WindowMode mode)
 	{
 		// TODO: Implement SetWindowMode functionality
+	}
+	
+	void Window::SetClearColor(const glm::vec4 &color)
+	{
+		glClearColor(color.r, color.g, color.b, color.a);
 	}
 }

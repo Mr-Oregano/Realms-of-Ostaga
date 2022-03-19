@@ -3,10 +3,13 @@
 #include "ospch.h"
 //
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "Debug.h"
+
 #include "ImGuiSurface.h"
 
-#include "backends/imgui_impl_opengl3.cpp"
 #include "backends/imgui_impl_glfw.cpp"
+#include "backends/imgui_impl_opengl3.cpp"
 
 namespace Ostaga {
 
